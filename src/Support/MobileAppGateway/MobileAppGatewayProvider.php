@@ -7,8 +7,10 @@ use Cardz\Support\MobileAppGateway\Infrastructure\ACL\Collaboration\MonolithColl
 use Cardz\Support\MobileAppGateway\Infrastructure\ACL\Identity\MonolithIdentityAdapter;
 use Cardz\Support\MobileAppGateway\Infrastructure\ACL\Plans\MonolithPlansAdapter;
 use Cardz\Support\MobileAppGateway\Infrastructure\ACL\Workspaces\MonolithWorkspacesAdapter;
+use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\CustomerProfileReadStorageInterface;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\CustomerWorkspaceReadStorageInterface;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\IssuedCardReadStorageInterface;
+use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Eloquent\CustomerProfileReadStorage;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Eloquent\CustomerWorkspaceReadStorage;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Eloquent\IssuedCardReadStorage;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Workspace\Contracts\BusinessCardReadStorageInterface;
@@ -29,6 +31,7 @@ class MobileAppGatewayProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(IssuedCardReadStorageInterface::class, IssuedCardReadStorage::class);
+        $this->app->singleton(CustomerProfileReadStorageInterface::class, CustomerProfileReadStorage::class);
         $this->app->singleton(CustomerWorkspaceReadStorageInterface::class, CustomerWorkspaceReadStorage::class);
         $this->app->singleton(BusinessCardReadStorageInterface::class, BusinessCardReadStorage::class);
         $this->app->singleton(BusinessPlanReadStorageInterface::class, BusinessPlanReadStorage::class);

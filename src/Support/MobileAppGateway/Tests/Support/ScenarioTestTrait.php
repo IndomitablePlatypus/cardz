@@ -2,7 +2,14 @@
 
 namespace Cardz\Support\MobileAppGateway\Tests\Support;
 
+use Carbon\Carbon;
 use Cardz\Core\Cards\Domain\Persistence\Contracts\CardRepositoryInterface;
+use Cardz\Core\Personal\Domain\Model\Person\Name;
+use Cardz\Core\Personal\Domain\Model\Person\Person;
+use Cardz\Core\Personal\Domain\Model\Person\PersonId;
+use Cardz\Core\Personal\Domain\Persistence\Contracts\PersonRepositoryInterface;
+use Cardz\Core\Personal\Domain\ReadModel\Contracts\JoinedPersonStorageInterface;
+use Cardz\Core\Personal\Domain\ReadModel\JoinedPerson;
 use Cardz\Core\Plans\Domain\Persistence\Contracts\PlanRepositoryInterface;
 use Cardz\Core\Plans\Domain\Persistence\Contracts\RequirementRepositoryInterface;
 use Cardz\Core\Workspaces\Domain\Model\Workspace\Keeper;
@@ -32,14 +39,20 @@ trait ScenarioTestTrait
         foreach ($this->environment->keepers as $keeper) {
             $this->getUserRepository()->persist($keeper);
             $this->getKeeperRepository()->store(Keeper::register(KeeperId::of($keeper->userId)));
+            $this->getPersonRepository()->store(Person::join(PersonId::of($keeper->userId), Name::of($keeper->toArray()['name'])));
+            $this->getPersonReadStore()->persist(new JoinedPerson($keeper->userId, $keeper->toArray()['name'], Carbon::now()));
         }
         foreach ($this->environment->collaborators as $collaborator) {
             $this->getUserRepository()->persist($collaborator);
             $this->getKeeperRepository()->store(Keeper::register(KeeperId::of($collaborator->userId)));
+            $this->getPersonRepository()->store(Person::join(PersonId::of($collaborator->userId), Name::of($collaborator->toArray()['name'])));
+            $this->getPersonReadStore()->persist(new JoinedPerson($collaborator->userId, $collaborator->toArray()['name'], Carbon::now()));
         }
         foreach ($this->environment->customers as $customer) {
             $this->getUserRepository()->persist($customer);
             $this->getKeeperRepository()->store(Keeper::register(KeeperId::of($customer->userId)));
+            $this->getPersonRepository()->store(Person::join(PersonId::of($customer->userId), Name::of($customer->toArray()['name'])));
+            $this->getPersonReadStore()->persist(new JoinedPerson($customer->userId, $customer->toArray()['name'], Carbon::now()));
         }
 
         foreach ($this->environment->workspaces as $workspace) {
@@ -120,5 +133,15 @@ trait ScenarioTestTrait
     public function getResourceRepository(): ResourceRepositoryInterface
     {
         return $this->app->make(ResourceRepositoryInterface::class);
+    }
+
+    public function getPersonRepository(): PersonRepositoryInterface
+    {
+        return $this->app->make(PersonRepositoryInterface::class);
+    }
+
+    public function getPersonReadStore(): JoinedPersonStorageInterface
+    {
+        return $this->app->make(JoinedPersonStorageInterface::class);
     }
 }

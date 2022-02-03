@@ -12,8 +12,8 @@ final class IssuedCard implements JsonSerializable
 
     private function __construct(
         public string $cardId,
-        string $workspaceName,
-        string $workspaceAddress,
+        public string $workspaceName,
+        public string $workspaceAddress,
         public string $customerId,
         public string $description,
         public bool $satisfied,

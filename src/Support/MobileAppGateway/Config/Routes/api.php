@@ -18,6 +18,7 @@ Route::group(['prefix' => '/api/v1', 'middleware' => 'api'], function () {
         Route::group(['prefix' => '/customer'], function () {
             Route::get('/wipe-tokens', [CustomerController::class, 'clearTokens'])->name(RouteName::CLEAR_TOKENS);
             Route::get('/id', [CustomerController::class, 'getId'])->name(RouteName::CUSTOMER_ID);
+            Route::get('/profile', [CustomerController::class, 'getProfile'])->name(RouteName::CUSTOMER_PROFILE);
             Route::get('/card', [CustomerController::class, 'getCards'])->name(RouteName::CUSTOMER_CARDS);
             Route::get('/card/{cardId}', [CustomerController::class, 'getCard'])->name(RouteName::CUSTOMER_CARD);
         });

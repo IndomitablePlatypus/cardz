@@ -2,8 +2,10 @@
 
 namespace Cardz\Support\MobileAppGateway\Application\Services\Customer;
 
+use Cardz\Support\MobileAppGateway\Domain\ReadModel\Customer\CustomerProfile;
 use Cardz\Support\MobileAppGateway\Domain\ReadModel\Customer\IssuedCard;
 use Cardz\Support\MobileAppGateway\Infrastructure\Exceptions\IssuedCardNotFoundException;
+use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\CustomerProfileReadStorageInterface;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\CustomerWorkspaceReadStorageInterface;
 use Cardz\Support\MobileAppGateway\Infrastructure\ReadStorage\Customer\Contracts\IssuedCardReadStorageInterface;
 use Cardz\Support\MobileAppGateway\Integration\Contracts\IdentityContextInterface;
@@ -13,6 +15,7 @@ class CustomerAppService
 {
     public function __construct(
         private IssuedCardReadStorageInterface $issuedCardReadStorage,
+        private CustomerProfileReadStorageInterface $profileReadStorage,
         private CustomerWorkspaceReadStorageInterface $customerWorkspaceReadStorage,
         private IdentityContextInterface $identityContext,
     ) {
@@ -21,6 +24,11 @@ class CustomerAppService
     public function getCustomerId(): string
     {
         return Auth::id();
+    }
+
+    public function getCustomerProfile(): CustomerProfile
+    {
+        return $this->profileReadStorage->byCustomerId(Auth::id());
     }
 
     /**

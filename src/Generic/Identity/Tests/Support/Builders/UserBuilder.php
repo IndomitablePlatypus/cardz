@@ -55,6 +55,6 @@ final class UserBuilder extends BaseBuilder
 
     public function getIdentity(): string
     {
-        return $this->email ?? $this->phone;
+        return $this->phone ?? $this->email;
     }
 }

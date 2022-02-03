@@ -7,6 +7,7 @@ use App\OpenApi\Requests\Customer\RegisterRequestBody;
 use App\OpenApi\Responses\ApiAccessTokenResponse;
 use App\OpenApi\Responses\ClearTokensResponse;
 use App\OpenApi\Responses\CustomerIdResponse;
+use App\OpenApi\Responses\CustomerProfileResponse;
 use App\OpenApi\Responses\CustomerWorkspacesResponse;
 use App\OpenApi\Responses\Errors\AuthenticationExceptionResponse;
 use App\OpenApi\Responses\Errors\AuthorizationExceptionResponse;
@@ -52,6 +53,22 @@ class CustomerController extends BaseController
     public function getId(): JsonResponse
     {
         return $this->response($this->customerAppService->getCustomerId());
+    }
+
+    /**
+     * Get authorized user profile
+     *
+     * Returns profile.
+     */
+    #[OpenApi\Operation(id: RouteName::CUSTOMER_PROFILE, tags: ['customer'], security: BearerTokenSecurityScheme::class)]
+    #[OpenApi\Response(factory: CustomerProfileResponse::class, statusCode: 200)]
+    #[OpenApi\Response(factory: AuthenticationExceptionResponse::class, statusCode: 401)]
+    #[OpenApi\Response(factory: AuthorizationExceptionResponse::class, statusCode: 403)]
+    #[OpenApi\Response(factory: NotFoundResponse::class, statusCode: 404)]
+    #[OpenApi\Response(factory: UnexpectedExceptionResponse::class, statusCode: 500)]
+    public function getProfile(): JsonResponse
+    {
+        return $this->response($this->customerAppService->getCustomerProfile());
     }
 
     /**

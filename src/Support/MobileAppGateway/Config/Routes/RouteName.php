@@ -43,6 +43,7 @@ final class RouteName extends Enum
 
     public const CUSTOMER_WORKSPACES = 'GetCustomerWorkspaces';
     public const CUSTOMER_ID = 'GetCustomerId';
+    public const CUSTOMER_PROFILE = 'GetCustomerProfile';
     public const CUSTOMER_CARDS = 'GetCustomerCards';
     public const CUSTOMER_CARD = 'GetCustomerCard';
 }
