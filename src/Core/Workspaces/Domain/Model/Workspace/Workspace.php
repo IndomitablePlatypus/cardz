@@ -28,7 +28,7 @@ final class Workspace implements EventDrivenAggregateRootInterface
         $workspace = new self(WorkspaceId::of($workspaceId));
         $workspace->added = $added;
         $workspace->keeperId = KeeperId::of($keeperId);
-        $workspace->profile = Profile::ofData($profile);
+        $workspace->profile = Profile::of(...$profile);
         $workspace->added = new Carbon($added);
         return $workspace;
     }

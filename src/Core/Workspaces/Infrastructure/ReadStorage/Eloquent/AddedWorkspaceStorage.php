@@ -52,7 +52,7 @@ class AddedWorkspaceStorage implements AddedWorkspaceStorageInterface
         return new AddedWorkspace(
             $eloquentWorkspace->id,
             $eloquentWorkspace->keeper_id,
-            Profile::ofData($profile),
+            Profile::of(...$profile),
             $eloquentWorkspace->added_at,
         );
     }

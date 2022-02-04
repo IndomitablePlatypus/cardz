@@ -26,7 +26,7 @@ final class WorkspaceAdded extends BaseWorkspaceDomainEvent
     {
         return new self(
             KeeperId::of($data['keeperId']),
-            Profile::ofData($data['profile']),
+            Profile::of(...$data['profile']),
             new Carbon($data['added']),
         );
     }

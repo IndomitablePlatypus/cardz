@@ -5,6 +5,8 @@ namespace Codderz\Platypus\Infrastructure\Support\Domain;
 use Carbon\Carbon;
 use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
 use Codderz\Platypus\Contracts\GenericIdInterface;
+use Codderz\Platypus\Infrastructure\Support\ArrayPresenterTrait;
+use Codderz\Platypus\Infrastructure\Support\JsonArrayPresenterTrait;
 use Codderz\Platypus\Infrastructure\Support\ShortClassNameTrait;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Pure;
@@ -14,7 +16,9 @@ use ReflectionProperty;
 
 trait AggregateEventTrait
 {
-    use ShortClassNameTrait;
+    use ShortClassNameTrait, JsonArrayPresenterTrait {
+        JsonArrayPresenterTrait::toArray as _toArray;
+    }
 
     protected Carbon $at;
 
@@ -77,7 +81,7 @@ trait AggregateEventTrait
             'stream' => (string) $this->stream(),
             'at' => $this->at(),
             'version' => $this->version(),
-            'changeset' => json_encode($this->changeset(), JSON_THROW_ON_ERROR),
+            'changeset' => json_encode($this->_toArray(publicOnly: true), JSON_THROW_ON_ERROR),
         ];
     }
 

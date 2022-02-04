@@ -29,11 +29,7 @@ final class Profile implements ValueObjectInterface
     #[Pure]
     public static function ofData(array $profile): self
     {
-        return self::of(
-            $profile['name'] ?? '',
-            $profile['description'] ?? '',
-            $profile['address'] ?? '',
-        );
+        return self::of(...$profile);
     }
 
     #[Pure]

@@ -21,7 +21,7 @@ final class WorkspaceProfileChanged extends BaseWorkspaceDomainEvent
     #[Pure]
     public static function from(array $data): self
     {
-        return new self(Profile::of($data['profile']['name'], $data['profile']['description'], $data['profile']['address']));
+        return new self(Profile::of(...$data['profile']));
     }
 
 }
