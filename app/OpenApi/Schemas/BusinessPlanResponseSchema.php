@@ -46,6 +46,7 @@ class BusinessPlanResponseSchema extends SchemaFactory implements Reusable
             ->description('Whether the plan is archived');
 
         $expirationDate = Schema::string('expirationDate')
+            ->nullable(true)
             ->format(Schema::FORMAT_DATE_TIME)
             ->description('Plan expiration date');
 
