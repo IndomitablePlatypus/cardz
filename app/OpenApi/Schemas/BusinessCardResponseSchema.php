@@ -82,8 +82,7 @@ class BusinessCardResponseSchema extends SchemaFactory implements Reusable
 
         return Schema::object('BusinessCard')
             ->required($cardId, $planId, $customerId, $isIssued, $isSatisfied, $isCompleted, $isRevoked, $isBlocked, $achievements, $requirements)
-            ->properties($cardId, $planId, $customerId, $isIssued, $isSatisfied, $isCompleted, $isRevoked, $isBlocked, $achievements, $requirements)
-            ;
+            ->properties($cardId, $planId, $customerId, $isIssued, $isSatisfied, $isCompleted, $isRevoked, $isBlocked, $achievements, $requirements);
     }
 
 }

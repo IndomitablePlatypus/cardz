@@ -4,7 +4,6 @@ namespace App\OpenApi\Schemas;
 
 use GoldSpecDigital\ObjectOrientedOAS\Contracts\SchemaContract;
 use GoldSpecDigital\ObjectOrientedOAS\Exceptions\InvalidArgumentException;
-use GoldSpecDigital\ObjectOrientedOAS\Objects\AnyOf;
 use GoldSpecDigital\ObjectOrientedOAS\Objects\Schema;
 use Vyuldashev\LaravelOpenApi\Contracts\Reusable;
 use Vyuldashev\LaravelOpenApi\Factories\SchemaFactory;
