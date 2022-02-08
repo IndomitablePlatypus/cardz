@@ -13,6 +13,7 @@ final class ReadPlan implements JsonSerializable
     public function __construct(
         public string $planId,
         public string $workspaceId,
+        public string $name,
         public string $description,
         public bool $isAdded,
         public bool $isLaunched,

@@ -52,10 +52,12 @@ class ReadPlanStorage implements ReadPlanStorageInterface
                 $eloquentRequirement->description,
             );
         }
+        $profile = is_string($eloquentPlan->profile) ? json_try_decode($eloquentPlan->profile, true) : $eloquentPlan->profile;
         return new ReadPlan(
             $eloquentPlan->id,
             $eloquentPlan->workspace_id,
-            $eloquentPlan->description,
+            $profile['name'],
+            $profile['description'],
             $eloquentPlan->added_at !== null,
             $eloquentPlan->launched_at !== null,
             $eloquentPlan->stopped_at !== null,
