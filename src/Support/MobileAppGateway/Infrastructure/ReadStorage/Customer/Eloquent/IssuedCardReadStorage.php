@@ -47,6 +47,13 @@ class IssuedCardReadStorage implements IssuedCardReadStorageInterface
         $achievements = is_string($card->achievements) ? json_try_decode($card->achievements, true) : $card->achievements;
         $requirements = is_string($card->requirements) ? json_try_decode($card->requirements, true) : $card->requirements;
 
+        foreach ($achievements as $index => $achievement) {
+            $achievements[$index] = ['achievementId' => $achievement[0], 'description' => $achievement[1]];
+        }
+        foreach ($requirements as $index => $requirement) {
+            $requirements[$index] = ['requirementId' => $requirement[0], 'description' => $requirement[1]];
+        }
+
         return IssuedCard::make(
             $card->id,
             $card->plan->workspace->profile['name'],
