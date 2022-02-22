@@ -3,7 +3,7 @@
     "info": {
         "title": "Cardz",
         "description": "Bonus cards server-side application",
-        "version": "0.5.1.254"
+        "version": "0.5.1.256"
     },
     "servers": [
         {
@@ -1926,19 +1926,19 @@
                         "description": "Workspace (business) name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Nicolas, Lehner and Nolan"
+                        "example": "Shields Group"
                     },
                     "description": {
                         "description": "Workspace (business) description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Cumque voluptas doloremque sed vero explicabo velit dolor. Doloremque modi laudantium nobis totam eaque omnis qui. Aut nesciunt distinctio deserunt doloremque sunt."
+                        "example": "Ea sunt consequuntur molestiae quis qui. Minima et blanditiis placeat aut. Omnis molestiae ratione culpa dolor sunt earum. Totam sed numquam possimus."
                     },
                     "address": {
                         "description": "Workspace (business) address",
                         "type": "string",
                         "nullable": false,
-                        "example": "856 Nicolas Rue Apt. 949\nNorth Ramonafort, UT 28205-3145"
+                        "example": "471 Jarred Fields\nLethahaven, AK 43087-6783"
                     }
                 }
             },
@@ -2020,7 +2020,7 @@
                                     "description": "Achievement description = corresponding requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Facilis perspiciatis iusto error modi quisquam rerum est. Cum ex voluptatem vel saepe asperiores libero. Ipsa ad sunt voluptatem ipsa. Sed voluptate dignissimos magnam."
+                                    "example": "Consequatur doloribus sed quidem tempora maiores provident. Libero sunt blanditiis sit ut ex quia rem. Corporis vel non optio non vitae fugiat nihil."
                                 }
                             }
                         }
@@ -2045,7 +2045,7 @@
                                     "description": "Requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Occaecati quis ad id natus eos unde non. Eum est dolor corporis necessitatibus quo magni assumenda. Est consectetur labore quam consequatur quo eveniet."
+                                    "example": "Aut voluptas quod eum. Sunt corrupti recusandae quibusdam sint asperiores vel non. Expedita est velit nam quia et fugit. Quae nesciunt omnis ex quam eos inventore."
                                 }
                             }
                         }
@@ -2064,17 +2064,17 @@
                     "name": {
                         "description": "Workspace (business) title",
                         "type": "string",
-                        "example": "Stark Group"
+                        "example": "Dicki Inc"
                     },
                     "description": {
                         "description": "Workspace (business) description",
                         "type": "string",
-                        "example": "Qui quaerat qui ab nam. Cum dolorem cum est. Quia architecto fugiat est consectetur eos consequatur quasi."
+                        "example": "Vel tempore iusto modi earum eos. Laborum dolore vel qui sunt delectus nobis pariatur. A sequi non asperiores quia. At quis impedit maxime molestias accusamus maiores veniam."
                     },
                     "address": {
                         "description": "Workspace (business) address",
                         "type": "string",
-                        "example": "527 Gorczany Ranch Suite 995\nTremblayside, MS 53690-3672"
+                        "example": "30493 Duncan Divide\nAlbury, MT 75839-2259"
                     }
                 }
             },
@@ -2089,12 +2089,12 @@
                     "name": {
                         "description": "Plan name",
                         "type": "string",
-                        "example": "Laudantium quidem corrupti fuga cumque velit."
+                        "example": "Velit impedit distinctio quam corporis animi earum placeat."
                     },
                     "description": {
                         "description": "Plan description",
                         "type": "string",
-                        "example": "Dolorem quia praesentium consectetur alias saepe. Necessitatibus est doloribus aliquam minima. Est qui dolor omnis libero nobis voluptatem."
+                        "example": "Est atque sit debitis dolor perspiciatis. Illo culpa sint sed aut. Aliquid ad cum fuga doloremque labore dolorem beatae."
                     }
                 }
             },
@@ -2108,7 +2108,7 @@
                     "description": {
                         "description": "Requirement description",
                         "type": "string",
-                        "example": "Esse dolorum voluptas aut saepe officia eum. Eum cupiditate aut praesentium soluta quae voluptate iste. Et minima saepe velit dolorem voluptatibus consequatur."
+                        "example": "Deleniti cupiditate voluptates maiores accusantium. Ex et odio exercitationem est non."
                     }
                 }
             },
@@ -2142,7 +2142,7 @@
                     "description": {
                         "description": "Achievement (requirement) description",
                         "type": "string",
-                        "example": "Facere aspernatur officia cupiditate aut iure ullam. Possimus a suscipit quo qui. Et excepturi assumenda reiciendis et sint libero. Velit et dolor deserunt quia."
+                        "example": "Deserunt deleniti aut autem dolores tempore. Maxime cupiditate modi delectus. Sapiente a perferendis voluptatibus voluptates molestiae. Quibusdam totam molestiae ea repellendus dolorem."
                     }
                 }
             },
@@ -2158,18 +2158,18 @@
                     "identity": {
                         "description": "Identity is either phone or email",
                         "type": "string",
-                        "example": "heaney.cheyenne@yahoo.com"
+                        "example": "robel.carter@satterfield.com"
                     },
                     "password": {
                         "description": "Password",
                         "format": "password",
                         "type": "string",
-                        "example": "HPwpefhFIip;)ua"
+                        "example": "[h*KrV|TiUx\\38-F\"HJ,"
                     },
                     "deviceName": {
                         "description": "Device name is required to distinguish between different access tokens",
                         "type": "string",
-                        "example": "earum"
+                        "example": "quod"
                     }
                 }
             },
@@ -2186,28 +2186,28 @@
                     "phone": {
                         "description": "Phone",
                         "type": "string",
-                        "example": "308.394.3921"
+                        "example": "(224) 733-9480"
                     },
                     "email": {
                         "description": "Email is required if phone is not provided",
                         "type": "string",
-                        "example": "rippin.alba@pouros.info"
+                        "example": "nbeier@gutmann.com"
                     },
                     "name": {
                         "description": "Customer name",
                         "type": "string",
-                        "example": "Prof. Aurelie Deckow"
+                        "example": "Mandy Parker"
                     },
                     "password": {
                         "description": "Password",
                         "format": "password",
                         "type": "string",
-                        "example": "j't:5cG\\\/"
+                        "example": "_U#@mff8e['Z07"
                     },
                     "deviceName": {
                         "description": "Device name is required to distinguish between different access tokens",
                         "type": "string",
-                        "example": "quam"
+                        "example": "mollitia"
                     }
                 }
             },
@@ -2241,6 +2241,7 @@
                     "description",
                     "satisfied",
                     "completed",
+                    "blocked",
                     "achievements",
                     "requirements"
                 ],
@@ -2255,13 +2256,13 @@
                         "description": "Workspace (business) name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Huel-Abernathy"
+                        "example": "Rice LLC"
                     },
                     "workspaceAddress": {
                         "description": "Workspace (business) address",
                         "type": "string",
                         "nullable": false,
-                        "example": "641 Maye Gateway\nOndrickafurt, ME 84248"
+                        "example": "5685 Kathlyn Plaza Apt. 470\nPort Dorian, UT 51289-6263"
                     },
                     "customerId": {
                         "description": "Customer Id",
@@ -2273,7 +2274,7 @@
                         "description": "Card (plan) description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Quia et quis eius est sit dolorum quis pariatur. Unde veniam et id dicta unde rem. Praesentium unde non voluptatibus consectetur. Facilis et vitae voluptatem repellendus laboriosam voluptatem nemo."
+                        "example": "Sit eum ex necessitatibus eum placeat vel consequatur aliquam. Quia harum et a sapiente. Sed est consequatur odit odio aut. Expedita occaecati in cupiditate necessitatibus est."
                     },
                     "satisfied": {
                         "description": "Whether all requirements to receive a bonus are satisfied",
@@ -2282,6 +2283,11 @@
                     },
                     "completed": {
                         "description": "Whether customer has received the bonus for this card",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "blocked": {
+                        "description": "Whether the card has been blocked",
                         "type": "boolean",
                         "nullable": false
                     },
@@ -2305,11 +2311,11 @@
                                     "description": "Achievement description = corresponding requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Minima enim sed amet inventore magni iusto. Voluptas itaque quasi iure suscipit. Facere in aliquid aut voluptatem similique qui officia. Quia quo sit accusantium sapiente."
+                                    "example": "Repellendus optio quis necessitatibus molestiae et temporibus ea. Odio consequuntur mollitia labore nisi. Sequi velit ratione autem architecto dignissimos repudiandae quia neque."
                                 }
                             }
                         },
-                        "example": "Eos quasi ullam est mollitia consequatur dolor. Quasi vero aut quisquam delectus. Quaerat ullam consequatur aspernatur delectus non sint eligendi sed."
+                        "example": "Recusandae voluptas qui quisquam voluptate sit iusto. Ea earum numquam ullam itaque deserunt illo. Itaque quis quis fuga ipsum eaque suscipit aut."
                     },
                     "requirements": {
                         "description": "All requirements",
@@ -2331,7 +2337,7 @@
                                     "description": "Requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Aut distinctio recusandae qui. Facilis non veritatis inventore. Beatae voluptatum culpa doloremque velit vitae facilis quo."
+                                    "example": "Cupiditate impedit neque ratione doloremque et. Minus ut beatae excepturi molestias. Quis vitae necessitatibus earum."
                                 }
                             }
                         }
@@ -2355,12 +2361,12 @@
                     "name": {
                         "description": "Customer name",
                         "type": "string",
-                        "example": "Dr. Verona Stanton"
+                        "example": "Korey Lubowitz"
                     },
                     "phone": {
                         "description": "Phone",
                         "type": "string",
-                        "example": "1-682-653-9385"
+                        "example": "737-917-5714"
                     }
                 }
             },
@@ -2383,19 +2389,19 @@
                         "description": "Workspace (business) name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Langworth, Cole and Rutherford"
+                        "example": "Adams Ltd"
                     },
                     "description": {
                         "description": "Workspace (business) description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Autem voluptates earum maxime officia hic. In debitis distinctio qui recusandae aspernatur esse tenetur. A sunt illo hic praesentium quo."
+                        "example": "Quia magni atque dicta deleniti atque ab. Quia fugiat sit eius pariatur id. Adipisci ut ut aut delectus distinctio fugit doloribus eligendi. Cumque tempora quis aut et vitae non."
                     },
                     "address": {
                         "description": "Workspace (business) address",
                         "type": "string",
                         "nullable": false,
-                        "example": "7455 Boehm Heights\nEast Juvenalbury, CT 69326"
+                        "example": "40193 Luther Road Suite 303\nGoldenchester, PA 40395"
                     }
                 }
             },
@@ -2429,13 +2435,13 @@
                         "description": "Plan name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Iure ab ipsum illo deleniti iusto exercitationem."
+                        "example": "Dolores neque autem quia atque praesentium beatae et delectus."
                     },
                     "description": {
                         "description": "Plan description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Nihil hic sint explicabo dolores in autem occaecati. Quidem alias expedita voluptatibus. Optio maxime facilis et tenetur tempora voluptatibus quisquam."
+                        "example": "Totam qui numquam rerum. Omnis omnis autem sunt mollitia quod architecto impedit. Doloribus sit necessitatibus animi rerum deserunt. Est possimus inventore enim dolorum necessitatibus minus dolorem."
                     },
                     "isLaunched": {
                         "description": "Whether the plan is launched",
@@ -2478,7 +2484,7 @@
                                     "description": "Requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Odio est voluptatem ullam labore explicabo qui. Doloribus sed illum fuga rerum ut architecto. Dolorem quae quia eveniet nihil blanditiis assumenda."
+                                    "example": "Autem odit molestiae itaque vel optio vitae aut. Sed eos ut aut rerum. Velit et molestiae vero numquam nemo est. Molestiae eius nemo eaque dicta sint."
                                 }
                             }
                         }

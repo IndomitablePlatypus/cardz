@@ -18,7 +18,7 @@ return [
     'name' => env('APP_NAME', 'Cardz'),
     'author' => env('APP_AUTHOR', 'Codderz'),
     'description' => env('APP_DESCRIPTION', 'Bonus cards server-side application'),
-    'version' => env('APP_VERSION', '0.5.1.255'),
+    'version' => env('APP_VERSION', '0.5.1.256'),
 
     /*
     |--------------------------------------------------------------------------

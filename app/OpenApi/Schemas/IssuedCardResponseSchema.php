@@ -46,6 +46,10 @@ class IssuedCardResponseSchema extends SchemaFactory implements Reusable
             ->nullable(false)
             ->description('Whether customer has received the bonus for this card');
 
+        $blocked = Schema::boolean('blocked')
+            ->nullable(false)
+            ->description('Whether the card has been blocked');
+
         $achievement = Schema::object()->properties(
             Schema::string('achievementId')
                 ->nullable(false)
@@ -79,8 +83,8 @@ class IssuedCardResponseSchema extends SchemaFactory implements Reusable
             ->description('All requirements');
 
         return Schema::object('IssuedCard')
-            ->properties($cardId, $workspaceName, $workspaceAddress, $customerId, $description, $satisfied, $completed, $achievements, $requirements)
-            ->required($cardId, $workspaceName, $workspaceAddress, $customerId, $description, $satisfied, $completed, $achievements, $requirements);
+            ->properties($cardId, $workspaceName, $workspaceAddress, $customerId, $description, $satisfied, $completed, $blocked, $achievements, $requirements)
+            ->required($cardId, $workspaceName, $workspaceAddress, $customerId, $description, $satisfied, $completed, $blocked, $achievements, $requirements);
     }
 
 }

@@ -18,6 +18,7 @@ final class IssuedCard implements JsonSerializable
         public string $description,
         public bool $satisfied,
         public bool $completed,
+        public bool $blocked,
         public array $achievements,
         public array $requirements,
     ) {
@@ -36,6 +37,7 @@ final class IssuedCard implements JsonSerializable
         string $description,
         bool $satisfied,
         bool $completed,
+        bool $blocked,
         array $achievements,
         array $requirements,
     ): self {
@@ -47,6 +49,7 @@ final class IssuedCard implements JsonSerializable
             $description,
             $satisfied,
             $completed,
+            $blocked,
             $achievements,
             $requirements,
         );

@@ -16,7 +16,6 @@ class IssuedCardReadStorage implements IssuedCardReadStorageInterface
         $cards = EloquentCard::with('plan.workspace')
             ->where('customer_id', '=', $customerId)
             ->whereNull('revoked_at')
-            ->whereNull('blocked_at')
             ->get();
         $issuedCards = [];
         foreach ($cards as $card) {
@@ -33,7 +32,6 @@ class IssuedCardReadStorage implements IssuedCardReadStorageInterface
             ->where('id', '=', $cardId)
             ->where('customer_id', '=', $customerId)
             ->whereNull('revoked_at')
-            ->whereNull('blocked_at')
             ->first();
         if ($card === null) {
             throw new IssuedCardNotFoundException("Card: $cardId. Customer: $customerId");
@@ -62,6 +60,7 @@ class IssuedCardReadStorage implements IssuedCardReadStorageInterface
             $card->description,
             $card->satisfied_at !== null,
             $card->completed_at !== null,
+            $card->blocked_at !== null,
             $achievements,
             $requirements
         );
