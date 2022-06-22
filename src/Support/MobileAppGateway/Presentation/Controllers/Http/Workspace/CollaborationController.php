@@ -2,7 +2,6 @@
 
 namespace Cardz\Support\MobileAppGateway\Presentation\Controllers\Http\Workspace;
 
-use App\OpenApi\Responses\BusinessPlanResponse;
 use App\OpenApi\Responses\CollaboratorIdResponse;
 use App\OpenApi\Responses\Errors\AuthenticationExceptionResponse;
 use App\OpenApi\Responses\Errors\AuthorizationExceptionResponse;
@@ -55,8 +54,7 @@ class CollaborationController extends BaseController
      * @param Guid $inviteId Invite GUID
      */
     #[OpenApi\Operation(id: RouteName::ACCEPT_INVITE, tags: ['business', 'collaboration'])]
-    #[OpenApi\Response(factory: CollaboratorIdResponse::class, statusCode: 200)]
-    #[OpenApi\Response(factory: BusinessPlanResponse::class, statusCode: 200)]
+    #[OpenApi\Response(factory: InviteIdResponse::class, statusCode: 200)]
     #[OpenApi\Response(factory: DomainExceptionResponse::class, statusCode: 400)]
     #[OpenApi\Response(factory: AuthenticationExceptionResponse::class, statusCode: 401)]
     #[OpenApi\Response(factory: NotFoundResponse::class, statusCode: 404)]
@@ -75,7 +73,7 @@ class CollaborationController extends BaseController
      * @param Guid $inviteId Invite GUID
      */
     #[OpenApi\Operation(id: RouteName::DISCARD_INVITE, tags: ['business', 'collaboration'])]
-    #[OpenApi\Response(factory: CollaboratorIdResponse::class, statusCode: 200)]
+    #[OpenApi\Response(factory: InviteIdResponse::class, statusCode: 200)]
     #[OpenApi\Response(factory: AuthenticationExceptionResponse::class, statusCode: 401)]
     #[OpenApi\Response(factory: AuthorizationExceptionResponse::class, statusCode: 403)]
     #[OpenApi\Response(factory: NotFoundResponse::class, statusCode: 404)]

@@ -64,8 +64,7 @@ class IssuedCardResponseSchema extends SchemaFactory implements Reusable
 
         $achievements = Schema::array('achievements')
             ->items($achievement)
-            ->description('Achieved requirements')
-            ->example($this->text());
+            ->description('Achieved requirements');
 
         $requirement = Schema::object()->properties(
             Schema::string('requirementId')

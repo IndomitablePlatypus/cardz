@@ -1,13 +1,13 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "title": "Cardz",
+        "title": "Laravel",
         "description": "Bonus cards server-side application",
         "version": "0.5.1.256"
     },
     "servers": [
         {
-            "url": "http:\/\/localhost:8000\/api\/v1",
+            "url": "http:\/\/localhost\/api\/v1",
             "description": "App Environment"
         },
         {
@@ -708,11 +708,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Business plan",
+                        "description": "Invite Id",
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "$ref": "#\/components\/schemas\/BusinessPlan"
+                                    "description": "Invite Id",
+                                    "format": "uuid",
+                                    "type": "string"
                                 }
                             }
                         }
@@ -763,11 +765,11 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Collaborator Id",
+                        "description": "Invite Id",
                         "content": {
                             "application\/json": {
                                 "schema": {
-                                    "description": "Collaborator Id",
+                                    "description": "Invite Id",
                                     "format": "uuid",
                                     "type": "string"
                                 }
@@ -1900,11 +1902,10 @@
     },
     "components": {
         "schemas": {
-            "BusinessWorkspace": {
+            "CustomerWorkspace": {
                 "type": "object",
                 "required": [
                     "workspaceId",
-                    "keeperId",
                     "name",
                     "description",
                     "address"
@@ -1916,29 +1917,275 @@
                         "type": "string",
                         "nullable": false
                     },
-                    "keeperId": {
-                        "description": "Keeper Id",
-                        "format": "uuid",
-                        "type": "string",
-                        "nullable": false
-                    },
                     "name": {
                         "description": "Workspace (business) name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Shields Group"
+                        "example": "Douglas and Sons"
                     },
                     "description": {
                         "description": "Workspace (business) description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Ea sunt consequuntur molestiae quis qui. Minima et blanditiis placeat aut. Omnis molestiae ratione culpa dolor sunt earum. Totam sed numquam possimus."
+                        "example": "Debitis reiciendis repellat est beatae et perferendis est. Aperiam voluptatibus aut fugit eos omnis est atque. Accusantium quaerat recusandae aspernatur et quidem."
                     },
                     "address": {
                         "description": "Workspace (business) address",
                         "type": "string",
                         "nullable": false,
-                        "example": "471 Jarred Fields\nLethahaven, AK 43087-6783"
+                        "example": "873 Klein Road Suite 811\nNorth Eva, TX 13008-3385"
+                    }
+                }
+            },
+            "BusinessPlan": {
+                "type": "object",
+                "required": [
+                    "planId",
+                    "workspaceId",
+                    "name",
+                    "description",
+                    "isLaunched",
+                    "isStopped",
+                    "isArchived",
+                    "expirationDate",
+                    "requirements"
+                ],
+                "properties": {
+                    "planId": {
+                        "description": "Plan Id",
+                        "format": "uuid",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    "workspaceId": {
+                        "description": "Workspace Id",
+                        "format": "uuid",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    "name": {
+                        "description": "Plan name",
+                        "type": "string",
+                        "nullable": false,
+                        "example": "In sed error similique dicta."
+                    },
+                    "description": {
+                        "description": "Plan description",
+                        "type": "string",
+                        "nullable": false,
+                        "example": "Unde ut est ex impedit doloremque dolores qui. Possimus at est repellendus quasi sit distinctio eum. Libero et molestias quo eum dolorem eius ex deleniti. Quia quos reiciendis magni illo."
+                    },
+                    "isLaunched": {
+                        "description": "Whether the plan is launched",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "isStopped": {
+                        "description": "Whether the plan is stopped",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "isArchived": {
+                        "description": "Whether the plan is archived",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "expirationDate": {
+                        "description": "Plan expiration date",
+                        "format": "date-time",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "requirements": {
+                        "description": "All requirements",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "requirementId",
+                                "description"
+                            ],
+                            "properties": {
+                                "requirementId": {
+                                    "description": "Requirement id",
+                                    "format": "uuid",
+                                    "type": "string",
+                                    "nullable": false
+                                },
+                                "description": {
+                                    "description": "Requirement description",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "Non officiis qui sapiente. Tempora ut quibusdam dolorem in voluptatem mollitia. Iure suscipit praesentium doloribus fuga quae. Quo mollitia omnis perferendis. Dolores alias eaque assumenda at."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "PlanProfile": {
+                "description": "Plan profile request",
+                "type": "object",
+                "required": [
+                    "name",
+                    "description"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Plan name",
+                        "type": "string",
+                        "example": "Mollitia id eos debitis qui aut."
+                    },
+                    "description": {
+                        "description": "Plan description",
+                        "type": "string",
+                        "example": "Nobis qui quam dolore accusamus neque laborum ut doloremque. Cupiditate molestiae qui culpa et sint aut. Ut eveniet delectus et. Debitis quos hic qui rerum."
+                    }
+                }
+            },
+            "NewCard": {
+                "description": "New card request",
+                "type": "object",
+                "required": [
+                    "planId",
+                    "customerId"
+                ],
+                "properties": {
+                    "planId": {
+                        "description": "Plan id",
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "customerId": {
+                        "description": "Customer id",
+                        "format": "uuid",
+                        "type": "string"
+                    }
+                }
+            },
+            "IssuedCard": {
+                "type": "object",
+                "required": [
+                    "cardId",
+                    "workspaceName",
+                    "workspaceAddress",
+                    "customerId",
+                    "description",
+                    "satisfied",
+                    "completed",
+                    "blocked",
+                    "achievements",
+                    "requirements"
+                ],
+                "properties": {
+                    "cardId": {
+                        "description": "Card Id",
+                        "format": "uuid",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    "workspaceName": {
+                        "description": "Workspace (business) name",
+                        "type": "string",
+                        "nullable": false,
+                        "example": "Kozey PLC"
+                    },
+                    "workspaceAddress": {
+                        "description": "Workspace (business) address",
+                        "type": "string",
+                        "nullable": false,
+                        "example": "4425 Deckow Trail\nHahnhaven, SC 56492"
+                    },
+                    "customerId": {
+                        "description": "Customer Id",
+                        "format": "uuid",
+                        "type": "string",
+                        "nullable": false
+                    },
+                    "description": {
+                        "description": "Card (plan) description",
+                        "type": "string",
+                        "nullable": false,
+                        "example": "Et vel illum harum a ut. Dolorem facere incidunt nemo."
+                    },
+                    "satisfied": {
+                        "description": "Whether all requirements to receive a bonus are satisfied",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "completed": {
+                        "description": "Whether customer has received the bonus for this card",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "blocked": {
+                        "description": "Whether the card has been blocked",
+                        "type": "boolean",
+                        "nullable": false
+                    },
+                    "achievements": {
+                        "description": "Achieved requirements",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "achievementId",
+                                "description"
+                            ],
+                            "properties": {
+                                "achievementId": {
+                                    "description": "Achievement Id = corresponding requirement id",
+                                    "format": "uuid",
+                                    "type": "string",
+                                    "nullable": false
+                                },
+                                "description": {
+                                    "description": "Achievement description = corresponding requirement description",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "Ea deleniti dicta neque odio voluptas. Vel id placeat est voluptatem id. Quam sed aut labore reiciendis corrupti culpa rerum. Quibusdam debitis eos nam deserunt et aut fugit."
+                                }
+                            }
+                        }
+                    },
+                    "requirements": {
+                        "description": "All requirements",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "requirementId",
+                                "description"
+                            ],
+                            "properties": {
+                                "requirementId": {
+                                    "description": "Requirement id",
+                                    "format": "uuid",
+                                    "type": "string",
+                                    "nullable": false
+                                },
+                                "description": {
+                                    "description": "Requirement description",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "Ea et id ipsa ut est. Ratione error nesciunt ratione quia explicabo. Totam qui omnis sit quo maiores reprehenderit quidem voluptas."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "RequirementProfile": {
+                "description": "Requirement profile request",
+                "type": "object",
+                "required": [
+                    "description"
+                ],
+                "properties": {
+                    "description": {
+                        "description": "Requirement description",
+                        "type": "string",
+                        "example": "Id quae excepturi sit vero velit est. Sapiente culpa ut assumenda non itaque officia. Reiciendis ducimus modi quaerat eius amet. Vero qui similique minima a nulla illum."
                     }
                 }
             },
@@ -2020,7 +2267,7 @@
                                     "description": "Achievement description = corresponding requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Consequatur doloribus sed quidem tempora maiores provident. Libero sunt blanditiis sit ut ex quia rem. Corporis vel non optio non vitae fugiat nihil."
+                                    "example": "Est esse quis distinctio atque odio. Ut nam ut eius dolor. Quisquam dolore aut temporibus ut. Perspiciatis ex similique nesciunt. Dolore ut quidem nobis odit voluptate temporibus."
                                 }
                             }
                         }
@@ -2045,299 +2292,7 @@
                                     "description": "Requirement description",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Aut voluptas quod eum. Sunt corrupti recusandae quibusdam sint asperiores vel non. Expedita est velit nam quia et fugit. Quae nesciunt omnis ex quam eos inventore."
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "WorkspaceProfile": {
-                "description": "Workspace profile request",
-                "type": "object",
-                "required": [
-                    "name",
-                    "description",
-                    "address"
-                ],
-                "properties": {
-                    "name": {
-                        "description": "Workspace (business) title",
-                        "type": "string",
-                        "example": "Dicki Inc"
-                    },
-                    "description": {
-                        "description": "Workspace (business) description",
-                        "type": "string",
-                        "example": "Vel tempore iusto modi earum eos. Laborum dolore vel qui sunt delectus nobis pariatur. A sequi non asperiores quia. At quis impedit maxime molestias accusamus maiores veniam."
-                    },
-                    "address": {
-                        "description": "Workspace (business) address",
-                        "type": "string",
-                        "example": "30493 Duncan Divide\nAlbury, MT 75839-2259"
-                    }
-                }
-            },
-            "PlanProfile": {
-                "description": "Plan profile request",
-                "type": "object",
-                "required": [
-                    "name",
-                    "description"
-                ],
-                "properties": {
-                    "name": {
-                        "description": "Plan name",
-                        "type": "string",
-                        "example": "Velit impedit distinctio quam corporis animi earum placeat."
-                    },
-                    "description": {
-                        "description": "Plan description",
-                        "type": "string",
-                        "example": "Est atque sit debitis dolor perspiciatis. Illo culpa sint sed aut. Aliquid ad cum fuga doloremque labore dolorem beatae."
-                    }
-                }
-            },
-            "RequirementProfile": {
-                "description": "Requirement profile request",
-                "type": "object",
-                "required": [
-                    "description"
-                ],
-                "properties": {
-                    "description": {
-                        "description": "Requirement description",
-                        "type": "string",
-                        "example": "Deleniti cupiditate voluptates maiores accusantium. Ex et odio exercitationem est non."
-                    }
-                }
-            },
-            "PlanExpiration": {
-                "description": "Plan expiration request",
-                "type": "object",
-                "required": [
-                    "expirationDate"
-                ],
-                "properties": {
-                    "expirationDate": {
-                        "description": "Plan expiration date",
-                        "format": "date-time",
-                        "type": "string"
-                    }
-                }
-            },
-            "Achievement": {
-                "description": "Achievement request",
-                "type": "object",
-                "required": [
-                    "achievementId",
-                    "description"
-                ],
-                "properties": {
-                    "achievementId": {
-                        "description": "Achievement (requirement) id",
-                        "format": "uuid",
-                        "type": "string"
-                    },
-                    "description": {
-                        "description": "Achievement (requirement) description",
-                        "type": "string",
-                        "example": "Deserunt deleniti aut autem dolores tempore. Maxime cupiditate modi delectus. Sapiente a perferendis voluptatibus voluptates molestiae. Quibusdam totam molestiae ea repellendus dolorem."
-                    }
-                }
-            },
-            "GetTokenRequest": {
-                "description": "New API access token for the specific device request",
-                "type": "object",
-                "required": [
-                    "identity",
-                    "password",
-                    "deviceName"
-                ],
-                "properties": {
-                    "identity": {
-                        "description": "Identity is either phone or email",
-                        "type": "string",
-                        "example": "robel.carter@satterfield.com"
-                    },
-                    "password": {
-                        "description": "Password",
-                        "format": "password",
-                        "type": "string",
-                        "example": "[h*KrV|TiUx\\38-F\"HJ,"
-                    },
-                    "deviceName": {
-                        "description": "Device name is required to distinguish between different access tokens",
-                        "type": "string",
-                        "example": "quod"
-                    }
-                }
-            },
-            "RegisterRequest": {
-                "description": "Register new user",
-                "type": "object",
-                "required": [
-                    "phone",
-                    "name",
-                    "password",
-                    "deviceName"
-                ],
-                "properties": {
-                    "phone": {
-                        "description": "Phone",
-                        "type": "string",
-                        "example": "(224) 733-9480"
-                    },
-                    "email": {
-                        "description": "Email is required if phone is not provided",
-                        "type": "string",
-                        "example": "nbeier@gutmann.com"
-                    },
-                    "name": {
-                        "description": "Customer name",
-                        "type": "string",
-                        "example": "Mandy Parker"
-                    },
-                    "password": {
-                        "description": "Password",
-                        "format": "password",
-                        "type": "string",
-                        "example": "_U#@mff8e['Z07"
-                    },
-                    "deviceName": {
-                        "description": "Device name is required to distinguish between different access tokens",
-                        "type": "string",
-                        "example": "mollitia"
-                    }
-                }
-            },
-            "NewCard": {
-                "description": "New card request",
-                "type": "object",
-                "required": [
-                    "planId",
-                    "customerId"
-                ],
-                "properties": {
-                    "planId": {
-                        "description": "Plan id",
-                        "format": "uuid",
-                        "type": "string"
-                    },
-                    "customerId": {
-                        "description": "Customer id",
-                        "format": "uuid",
-                        "type": "string"
-                    }
-                }
-            },
-            "IssuedCard": {
-                "type": "object",
-                "required": [
-                    "cardId",
-                    "workspaceName",
-                    "workspaceAddress",
-                    "customerId",
-                    "description",
-                    "satisfied",
-                    "completed",
-                    "blocked",
-                    "achievements",
-                    "requirements"
-                ],
-                "properties": {
-                    "cardId": {
-                        "description": "Card Id",
-                        "format": "uuid",
-                        "type": "string",
-                        "nullable": false
-                    },
-                    "workspaceName": {
-                        "description": "Workspace (business) name",
-                        "type": "string",
-                        "nullable": false,
-                        "example": "Rice LLC"
-                    },
-                    "workspaceAddress": {
-                        "description": "Workspace (business) address",
-                        "type": "string",
-                        "nullable": false,
-                        "example": "5685 Kathlyn Plaza Apt. 470\nPort Dorian, UT 51289-6263"
-                    },
-                    "customerId": {
-                        "description": "Customer Id",
-                        "format": "uuid",
-                        "type": "string",
-                        "nullable": false
-                    },
-                    "description": {
-                        "description": "Card (plan) description",
-                        "type": "string",
-                        "nullable": false,
-                        "example": "Sit eum ex necessitatibus eum placeat vel consequatur aliquam. Quia harum et a sapiente. Sed est consequatur odit odio aut. Expedita occaecati in cupiditate necessitatibus est."
-                    },
-                    "satisfied": {
-                        "description": "Whether all requirements to receive a bonus are satisfied",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "completed": {
-                        "description": "Whether customer has received the bonus for this card",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "blocked": {
-                        "description": "Whether the card has been blocked",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "achievements": {
-                        "description": "Achieved requirements",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "achievementId",
-                                "description"
-                            ],
-                            "properties": {
-                                "achievementId": {
-                                    "description": "Achievement Id = corresponding requirement id",
-                                    "format": "uuid",
-                                    "type": "string",
-                                    "nullable": false
-                                },
-                                "description": {
-                                    "description": "Achievement description = corresponding requirement description",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "Repellendus optio quis necessitatibus molestiae et temporibus ea. Odio consequuntur mollitia labore nisi. Sequi velit ratione autem architecto dignissimos repudiandae quia neque."
-                                }
-                            }
-                        },
-                        "example": "Recusandae voluptas qui quisquam voluptate sit iusto. Ea earum numquam ullam itaque deserunt illo. Itaque quis quis fuga ipsum eaque suscipit aut."
-                    },
-                    "requirements": {
-                        "description": "All requirements",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "requirementId",
-                                "description"
-                            ],
-                            "properties": {
-                                "requirementId": {
-                                    "description": "Requirement id",
-                                    "format": "uuid",
-                                    "type": "string",
-                                    "nullable": false
-                                },
-                                "description": {
-                                    "description": "Requirement description",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "Cupiditate impedit neque ratione doloremque et. Minus ut beatae excepturi molestias. Quis vitae necessitatibus earum."
+                                    "example": "Sapiente sit nemo qui dolorem iste at corrupti dolores. Quia cum voluptates qui sequi quia incidunt inventore. Ex pariatur quae aut sint."
                                 }
                             }
                         }
@@ -2361,19 +2316,107 @@
                     "name": {
                         "description": "Customer name",
                         "type": "string",
-                        "example": "Korey Lubowitz"
+                        "example": "Kadin Walker"
                     },
                     "phone": {
                         "description": "Phone",
                         "type": "string",
-                        "example": "737-917-5714"
+                        "example": "(380) 758-9934"
                     }
                 }
             },
-            "CustomerWorkspace": {
+            "PlanExpiration": {
+                "description": "Plan expiration request",
+                "type": "object",
+                "required": [
+                    "expirationDate"
+                ],
+                "properties": {
+                    "expirationDate": {
+                        "description": "Plan expiration date",
+                        "format": "date-time",
+                        "type": "string"
+                    }
+                }
+            },
+            "GetTokenRequest": {
+                "description": "New API access token for the specific device request",
+                "type": "object",
+                "required": [
+                    "identity",
+                    "password",
+                    "deviceName"
+                ],
+                "properties": {
+                    "identity": {
+                        "description": "Identity is either phone or email",
+                        "type": "string",
+                        "example": "mdamore@hotmail.com"
+                    },
+                    "password": {
+                        "description": "Password",
+                        "format": "password",
+                        "type": "string",
+                        "example": "+vRca\"^<G!1-=GCKy.\/U"
+                    },
+                    "deviceName": {
+                        "description": "Device name is required to distinguish between different access tokens",
+                        "type": "string",
+                        "example": "nihil"
+                    }
+                }
+            },
+            "Achievement": {
+                "description": "Achievement request",
+                "type": "object",
+                "required": [
+                    "achievementId",
+                    "description"
+                ],
+                "properties": {
+                    "achievementId": {
+                        "description": "Achievement (requirement) id",
+                        "format": "uuid",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Achievement (requirement) description",
+                        "type": "string",
+                        "example": "Sint laborum atque laboriosam repudiandae repellat distinctio. Ut ut eius eum repellat porro voluptas. Est rem aut eveniet est fuga facilis odio."
+                    }
+                }
+            },
+            "WorkspaceProfile": {
+                "description": "Workspace profile request",
+                "type": "object",
+                "required": [
+                    "name",
+                    "description",
+                    "address"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "Workspace (business) title",
+                        "type": "string",
+                        "example": "Tillman-Schaefer"
+                    },
+                    "description": {
+                        "description": "Workspace (business) description",
+                        "type": "string",
+                        "example": "Qui et qui quia modi. Ut alias recusandae omnis amet mollitia. Ea eos consequatur minima consequuntur qui. Temporibus et unde sunt aut eum quia."
+                    },
+                    "address": {
+                        "description": "Workspace (business) address",
+                        "type": "string",
+                        "example": "7171 Ted Flats Suite 993\nLake Uriel, PA 41355-3662"
+                    }
+                }
+            },
+            "BusinessWorkspace": {
                 "type": "object",
                 "required": [
                     "workspaceId",
+                    "keeperId",
                     "name",
                     "description",
                     "address"
@@ -2385,114 +2428,114 @@
                         "type": "string",
                         "nullable": false
                     },
+                    "keeperId": {
+                        "description": "Keeper Id",
+                        "format": "uuid",
+                        "type": "string",
+                        "nullable": false
+                    },
                     "name": {
                         "description": "Workspace (business) name",
                         "type": "string",
                         "nullable": false,
-                        "example": "Adams Ltd"
+                        "example": "Hermiston, Cassin and Rogahn"
                     },
                     "description": {
                         "description": "Workspace (business) description",
                         "type": "string",
                         "nullable": false,
-                        "example": "Quia magni atque dicta deleniti atque ab. Quia fugiat sit eius pariatur id. Adipisci ut ut aut delectus distinctio fugit doloribus eligendi. Cumque tempora quis aut et vitae non."
+                        "example": "Eius sequi est et rem. Et rerum adipisci assumenda quasi officia. Aliquid ex dolorem quod voluptas. Ipsum aut qui velit sint enim voluptates minima. Dolores cupiditate quia dolorum corrupti."
                     },
                     "address": {
                         "description": "Workspace (business) address",
                         "type": "string",
                         "nullable": false,
-                        "example": "40193 Luther Road Suite 303\nGoldenchester, PA 40395"
+                        "example": "286 Ephraim Ports Suite 932\nPort Montyburgh, MA 31249"
                     }
                 }
             },
-            "BusinessPlan": {
+            "RegisterRequest": {
+                "description": "Register new user",
                 "type": "object",
                 "required": [
-                    "planId",
-                    "workspaceId",
+                    "phone",
                     "name",
-                    "description",
-                    "isLaunched",
-                    "isStopped",
-                    "isArchived",
-                    "expirationDate",
-                    "requirements"
+                    "password",
+                    "deviceName"
                 ],
                 "properties": {
-                    "planId": {
-                        "description": "Plan Id",
-                        "format": "uuid",
+                    "phone": {
+                        "description": "Phone",
                         "type": "string",
-                        "nullable": false
+                        "example": "937.719.5639"
                     },
-                    "workspaceId": {
-                        "description": "Workspace Id",
-                        "format": "uuid",
+                    "email": {
+                        "description": "Email is required if phone is not provided",
                         "type": "string",
-                        "nullable": false
+                        "example": "bolson@gmail.com"
                     },
                     "name": {
-                        "description": "Plan name",
+                        "description": "Customer name",
                         "type": "string",
-                        "nullable": false,
-                        "example": "Dolores neque autem quia atque praesentium beatae et delectus."
+                        "example": "Horace Witting"
                     },
-                    "description": {
-                        "description": "Plan description",
+                    "password": {
+                        "description": "Password",
+                        "format": "password",
                         "type": "string",
-                        "nullable": false,
-                        "example": "Totam qui numquam rerum. Omnis omnis autem sunt mollitia quod architecto impedit. Doloribus sit necessitatibus animi rerum deserunt. Est possimus inventore enim dolorum necessitatibus minus dolorem."
+                        "example": "'qo4|;{T"
                     },
-                    "isLaunched": {
-                        "description": "Whether the plan is launched",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "isStopped": {
-                        "description": "Whether the plan is stopped",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "isArchived": {
-                        "description": "Whether the plan is archived",
-                        "type": "boolean",
-                        "nullable": false
-                    },
-                    "expirationDate": {
-                        "description": "Plan expiration date",
-                        "format": "date-time",
+                    "deviceName": {
+                        "description": "Device name is required to distinguish between different access tokens",
                         "type": "string",
-                        "nullable": true
-                    },
-                    "requirements": {
-                        "description": "All requirements",
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "required": [
-                                "requirementId",
-                                "description"
-                            ],
-                            "properties": {
-                                "requirementId": {
-                                    "description": "Requirement id",
-                                    "format": "uuid",
-                                    "type": "string",
-                                    "nullable": false
-                                },
-                                "description": {
-                                    "description": "Requirement description",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "Autem odit molestiae itaque vel optio vitae aut. Sed eos ut aut rerum. Velit et molestiae vero numquam nemo est. Molestiae eius nemo eaque dicta sint."
-                                }
-                            }
-                        }
+                        "example": "maiores"
                     }
                 }
             }
         },
         "responses": {
+            "UserAlreadyRegisteredException": {
+                "description": "Bad Request",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "description": "User Already Registered Exception",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "User with given identity already registered"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "AuthenticationException": {
+                "description": "Unauthorized",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "description": "Authentication Exception",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "Invalid access token"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "ParametersAssertionException": {
                 "description": "Bad Request",
                 "content": {
@@ -2550,48 +2593,6 @@
                     }
                 }
             },
-            "AuthorizationException": {
-                "description": "Forbidden",
-                "content": {
-                    "application\/json": {
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "message"
-                            ],
-                            "properties": {
-                                "message": {
-                                    "description": "Authorization Exception",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "Subject <Subject Id> is not authorized for <Resource Type> <Resource Id>"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "UserAlreadyRegisteredException": {
-                "description": "Bad Request",
-                "content": {
-                    "application\/json": {
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "message"
-                            ],
-                            "properties": {
-                                "message": {
-                                    "description": "User Already Registered Exception",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "User with given identity already registered"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "UnexpectedException": {
                 "description": "Internal Server Error",
                 "content": {
@@ -2607,6 +2608,27 @@
                                     "type": "string",
                                     "nullable": false,
                                     "example": "Unexpected exception"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "DomainException": {
+                "description": "Bad Request",
+                "content": {
+                    "application\/json": {
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "message"
+                            ],
+                            "properties": {
+                                "message": {
+                                    "description": "Domain Exception",
+                                    "type": "string",
+                                    "nullable": false,
+                                    "example": "Domain logic forbids requested operation"
                                 }
                             }
                         }
@@ -2634,8 +2656,8 @@
                     }
                 }
             },
-            "AuthenticationException": {
-                "description": "Unauthorized",
+            "AuthorizationException": {
+                "description": "Forbidden",
                 "content": {
                     "application\/json": {
                         "schema": {
@@ -2645,31 +2667,10 @@
                             ],
                             "properties": {
                                 "message": {
-                                    "description": "Authentication Exception",
+                                    "description": "Authorization Exception",
                                     "type": "string",
                                     "nullable": false,
-                                    "example": "Invalid access token"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "DomainException": {
-                "description": "Bad Request",
-                "content": {
-                    "application\/json": {
-                        "schema": {
-                            "type": "object",
-                            "required": [
-                                "message"
-                            ],
-                            "properties": {
-                                "message": {
-                                    "description": "Domain Exception",
-                                    "type": "string",
-                                    "nullable": false,
-                                    "example": "Domain logic forbids requested operation"
+                                    "example": "Subject <Subject Id> is not authorized for <Resource Type> <Resource Id>"
                                 }
                             }
                         }
