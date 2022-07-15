@@ -25,8 +25,8 @@ final class KeeperRegistered implements AggregateEventInterface
         return new self();
     }
 
-    public static function from(): self
+    public static function from(array $data): static
     {
-        return new self();
+        return new static();
     }
 }

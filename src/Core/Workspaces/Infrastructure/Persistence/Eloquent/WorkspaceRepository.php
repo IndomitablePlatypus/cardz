@@ -2,74 +2,35 @@
 
 namespace Cardz\Core\Workspaces\Infrastructure\Persistence\Eloquent;
 
-use App\Models\ESStorage;
 use Cardz\Core\Workspaces\Domain\Exceptions\WorkspaceNotFoundExceptionInterface;
 use Cardz\Core\Workspaces\Domain\Model\Workspace\Workspace;
 use Cardz\Core\Workspaces\Domain\Model\Workspace\WorkspaceId;
 use Cardz\Core\Workspaces\Domain\Persistence\Contracts\WorkspaceRepositoryInterface;
 use Cardz\Core\Workspaces\Infrastructure\Exceptions\WorkspaceNotFoundException;
-use Codderz\Platypus\Contracts\Domain\AggregateEventInterface;
-use Codderz\Platypus\Infrastructure\Logging\SimpleLoggerTrait;
-use JsonException;
+use Codderz\Platypus\Contracts\GenericIdInterface;
+use Codderz\Platypus\Infrastructure\Persistence\EventStore\Eloquent\EloquentEventRepositoryTrait;
 
 class WorkspaceRepository implements WorkspaceRepositoryInterface
 {
-    use SimpleLoggerTrait;
-
-    public function store(Workspace $workspace): array
-    {
-        $events = $workspace->releaseEvents();
-        $data = [];
-        foreach ($events as $event) {
-            $data[] = $event->toArray();
-        }
-        ESStorage::query()->insert($data);
-        return $events;
-    }
+    use EloquentEventRepositoryTrait;
 
     /**
      * @throws WorkspaceNotFoundExceptionInterface
      */
     public function restore(WorkspaceId $workspaceId): Workspace
     {
-        $esEvents = $this->getESEvents($workspaceId);
-
-        $events = [];
-        foreach ($esEvents as $esEvent) {
-            $event = $this->restoreEvent($esEvent);
-            if ($event) {
-                $events[] = $event;
-            }
-        }
-        return (new Workspace($workspaceId))->apply(...$events);
+        return (new Workspace($workspaceId))->apply(...$this->getRestoredEvents($workspaceId));
     }
 
-    /**
-     * @return ESStorage[]
-     * @throws WorkspaceNotFoundExceptionInterface
-     */
-    protected function getESEvents(string $workspaceId): array
+    protected function getAggregateRootName(): string
     {
-        $esEvents = ESStorage::query()
-            ->where('channel', '=', Workspace::class)
-            ->where('stream', '=', $workspaceId)
-            ->orderBy('at')
-            ->get();
-        if ($esEvents->isEmpty()) {
-            throw new WorkspaceNotFoundException("Workspace $workspaceId not found");
-        }
-        return $esEvents->all();
+        return Workspace::class;
     }
 
-    protected function restoreEvent(ESStorage $esEvent): ?AggregateEventInterface
+    protected function assertAggregateRootCanBeRestored(GenericIdInterface $id, bool $eventsExist): void
     {
-        $eventClass = $esEvent->name;
-        try {
-            $changeset = json_decode($esEvent->changeset, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
-            $this->error("Unable to restore $eventClass event.");
-            return null;
+        if (!$eventsExist) {
+            throw new WorkspaceNotFoundException("Workspace $id not found");
         }
-        return [$eventClass, 'from']($changeset);
     }
 }

@@ -53,8 +53,8 @@ class Policy implements PolicyInterface
         AttributeCollectionInterface $config,
     ): AuthorizationResolution {
         $resolution = AuthorizationResolution::of();
-        foreach ($this->rules as $policy) {
-            $resolution = $policy->resolve($subject, $object, $config);
+        foreach ($this->rules as $rule) {
+            $resolution = $rule->resolve($subject, $object, $config);
             if ($resolution->isPermissive()) {
                 return $resolution;
             }
@@ -71,8 +71,8 @@ class Policy implements PolicyInterface
         AttributeCollectionInterface $config,
     ): AuthorizationResolution {
         $resolution = AuthorizationResolution::of(false);
-        foreach ($this->rules as $policy) {
-            $resolution = $policy->resolve($subject, $object, $config);
+        foreach ($this->rules as $rule) {
+            $resolution = $rule->resolve($subject, $object, $config);
             if ($resolution->isRestrictive()) {
                 return $resolution;
             }

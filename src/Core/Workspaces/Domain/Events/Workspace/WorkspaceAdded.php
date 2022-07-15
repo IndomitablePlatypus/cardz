@@ -22,9 +22,9 @@ final class WorkspaceAdded extends BaseWorkspaceDomainEvent
         return new self($keeperId, $profile, $added);
     }
 
-    public static function from(array $data): self
+    public static function from(array $data): static
     {
-        return new self(
+        return new static(
             KeeperId::of($data['keeperId']),
             Profile::of(...$data['profile']),
             new Carbon($data['added']),

@@ -10,6 +10,8 @@ interface AggregateEventInterface extends EventInterface
 {
     public static function shortName(): string;
 
+    public static function from(array $data): static;
+
     public function channel(): string;
 
     public function name(): string;

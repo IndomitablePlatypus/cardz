@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Cardz\Core\Personal\Domain\Events\Person\PersonJoined;
 use Cardz\Core\Personal\Domain\Events\Person\PersonNameChanged;
 use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
+use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Support\Domain\EventDrivenAggregateRootTrait;
 
 final class Person implements EventDrivenAggregateRootInterface

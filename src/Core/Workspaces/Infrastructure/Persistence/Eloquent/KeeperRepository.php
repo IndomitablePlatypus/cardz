@@ -2,74 +2,35 @@
 
 namespace Cardz\Core\Workspaces\Infrastructure\Persistence\Eloquent;
 
-use App\Models\ESStorage;
 use Cardz\Core\Workspaces\Domain\Exceptions\KeeperNotFoundExceptionInterface;
 use Cardz\Core\Workspaces\Domain\Model\Workspace\Keeper;
 use Cardz\Core\Workspaces\Domain\Model\Workspace\KeeperId;
 use Cardz\Core\Workspaces\Domain\Persistence\Contracts\KeeperRepositoryInterface;
 use Cardz\Core\Workspaces\Infrastructure\Exceptions\KeeperNotFoundException;
-use Codderz\Platypus\Contracts\Domain\AggregateEventInterface;
-use Codderz\Platypus\Infrastructure\Logging\SimpleLoggerTrait;
-use JsonException;
+use Codderz\Platypus\Contracts\GenericIdInterface;
+use Codderz\Platypus\Infrastructure\Persistence\EventStore\Eloquent\EloquentEventRepositoryTrait;
 
 class KeeperRepository implements KeeperRepositoryInterface
 {
-    use SimpleLoggerTrait;
-
-    public function store(Keeper $keeper): array
-    {
-        $events = $keeper->releaseEvents();
-        $data = [];
-        foreach ($events as $event) {
-            $data[] = $event->toArray();
-        }
-        ESStorage::query()->insert($data);
-        return $events;
-    }
+    use EloquentEventRepositoryTrait;
 
     /**
      * @throws KeeperNotFoundExceptionInterface
      */
     public function restore(KeeperId $keeperId): Keeper
     {
-        $esEvents = $this->getESEvents($keeperId);
-
-        $events = [];
-        foreach ($esEvents as $esEvent) {
-            $event = $this->restoreEvent($esEvent);
-            if ($event) {
-                $events[] = $event;
-            }
-        }
-        return (new Keeper($keeperId))->apply(...$events);
+        return (new Keeper($keeperId))->apply(...$this->getRestoredEvents($keeperId));
     }
 
-    /**
-     * @return ESStorage[]
-     * @throws KeeperNotFoundExceptionInterface
-     */
-    protected function getESEvents(string $keeperId): array
+    protected function getAggregateRootName(): string
     {
-        $esEvents = ESStorage::query()
-            ->where('channel', '=', Keeper::class)
-            ->where('stream', '=', $keeperId)
-            ->orderBy('at')
-            ->get();
-        if ($esEvents->isEmpty()) {
-            throw new KeeperNotFoundException("Keeper $keeperId not found");
-        }
-        return $esEvents->all();
+        return Keeper::class;
     }
 
-    protected function restoreEvent(ESStorage $esEvent): ?AggregateEventInterface
+    protected function assertAggregateRootCanBeRestored(GenericIdInterface $id, bool $eventsExist): void
     {
-        $eventClass = $esEvent->name;
-        try {
-            $changeset = json_decode($esEvent->changeset, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
-            $this->error("Unable to restore $eventClass event.");
-            return null;
+        if (!$eventsExist) {
+            throw new KeeperNotFoundException("Workspace $id not found");
         }
-        return [$eventClass, 'from']($changeset);
     }
 }
