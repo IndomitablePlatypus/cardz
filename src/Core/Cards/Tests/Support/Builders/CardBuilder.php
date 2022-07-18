@@ -8,19 +8,20 @@ use Cardz\Core\Cards\Domain\Model\Card\Achievements;
 use Cardz\Core\Cards\Domain\Model\Card\Card;
 use Cardz\Core\Cards\Domain\Model\Card\CardId;
 use Cardz\Core\Cards\Domain\Model\Card\CustomerId;
+use Cardz\Core\Cards\Domain\Model\Card\Description;
 use Cardz\Core\Cards\Domain\Model\Plan\PlanId;
 use Cardz\Core\Cards\Domain\Model\Plan\Requirement;
 use Codderz\Platypus\Infrastructure\Tests\BaseBuilder;
 
 final class CardBuilder extends BaseBuilder
 {
-    public string $cardId;
+    public CardId $cardId;
 
-    public string $planId;
+    public PlanId $planId;
 
-    public string $customerId;
+    public CustomerId $customerId;
 
-    public string $description;
+    public Description $description;
 
     public ?Carbon $issued = null;
 
@@ -32,36 +33,18 @@ final class CardBuilder extends BaseBuilder
 
     public ?Carbon $blocked = null;
 
-    /**
-     * @var Achievement[]
-     */
-    public array $achievements;
+    public Achievements $achievements;
 
-    /**
-     * @var Achievement[]
-     */
-    public array $requirements;
+    public Achievements $requirements;
 
     public function build(): Card
     {
-        return Card::restore(
-            $this->cardId,
-            $this->planId,
-            $this->customerId,
-            $this->description,
-            $this->issued,
-            $this->satisfied,
-            $this->completed,
-            $this->revoked,
-            $this->blocked,
-            $this->achievements,
-            $this->requirements,
-        );
+        return $this->forceConstruct(Card::class);
     }
 
     public function withRequirements(Requirement ... $requirements): self
     {
-        $this->requirements = Achievements::from(...$requirements)->toArray();
+        $this->requirements = Achievements::from(...$requirements);
         return $this;
     }
 
@@ -71,35 +54,35 @@ final class CardBuilder extends BaseBuilder
         foreach ($achievements as $achievement) {
             $achievementData[] = $achievement->toArray();
         }
-        $this->achievements = $achievementData;
+        $this->achievements = Achievements::of(...$achievementData);
         return $this;
     }
 
     public function withCustomerId(string $customerId): self
     {
-        $this->customerId = $customerId;
+        $this->customerId = CustomerId::of($customerId);
         return $this;
     }
 
     public function withPlanId(string $planId): self
     {
-        $this->planId = $planId;
+        $this->planId = PlanId::of($planId);
         return $this;
     }
 
     public function generate(): static
     {
-        $this->cardId = CardId::makeValue();
-        $this->planId = PlanId::makeValue();
-        $this->customerId = CustomerId::makeValue();
-        $this->description = $this->faker->text();
+        $this->cardId = CardId::make();
+        $this->planId = PlanId::make();
+        $this->customerId = CustomerId::make();
+        $this->description = Description::of($this->faker->text());
         $this->issued = Carbon::now();
         $this->satisfied = null;
         $this->completed = null;
         $this->revoked = null;
         $this->blocked = null;
-        $this->achievements = [];
-        $this->requirements = [];
+        $this->achievements = Achievements::of();
+        $this->requirements = Achievements::of();
         return $this;
     }
 }

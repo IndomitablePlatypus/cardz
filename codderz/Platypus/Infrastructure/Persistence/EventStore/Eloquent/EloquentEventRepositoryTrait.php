@@ -10,7 +10,6 @@ use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Logging\SimpleLoggerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use JsonException;
-use PhpParser\Node\Expr\Cast\Object_;
 
 trait EloquentEventRepositoryTrait
 {
