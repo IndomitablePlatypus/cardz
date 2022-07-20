@@ -16,12 +16,18 @@ use Cardz\Core\Cards\Domain\Events\Card\CardUnblocked;
 use Cardz\Core\Cards\Domain\Events\Card\RequirementsAccepted;
 use Cardz\Core\Cards\Domain\Exceptions\InvalidCardStateException;
 use Cardz\Core\Cards\Domain\Model\Plan\PlanId;
-use Codderz\Platypus\Contracts\Domain\AggregateRootInterface;
-use Codderz\Platypus\Infrastructure\Support\Domain\AggregateRootTrait;
+use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
+use Codderz\Platypus\Infrastructure\Support\Domain\EventDrivenAggregateRootTrait;
 
-final class Card implements AggregateRootInterface
+final class Card implements EventDrivenAggregateRootInterface
 {
-    use AggregateRootTrait;
+    use EventDrivenAggregateRootTrait;
+
+    public PlanId $planId;
+
+    public CustomerId $customerId;
+
+    public Description $description;
 
     private ?Carbon $issued = null;
 
@@ -37,51 +43,25 @@ final class Card implements AggregateRootInterface
 
     private Achievements $requirements;
 
-    private function __construct(
-        public CardId $cardId,
-        public PlanId $planId,
-        public CustomerId $customerId,
-        public Description $description,
-    ) {
+    public function __construct(public CardId $cardId)
+    {
         $this->achievements = Achievements::of();
         $this->requirements = Achievements::of();
     }
 
-    public static function issue(CardId $cardId, PlanId $planId, CustomerId $customerId, Description $description): self
+    public static function draft(CardId $cardId): self
     {
-        $card = new self($cardId, $planId, $customerId, $description);
-
-        $card->issued = Carbon::now();
-        return $card->withEvents(CardIssued::of($card));
+        return new self($cardId);
     }
 
-    public static function restore(
-        string $cardId,
-        string $planId,
-        string $customerId,
-        string $description,
-        ?Carbon $issued = null,
-        ?Carbon $satisfied = null,
-        ?Carbon $completed = null,
-        ?Carbon $revoked = null,
-        ?Carbon $blocked = null,
-        array $achievements = [],
-        array $requirements = [],
-    ): self {
-        $card = new Card(
-            CardId::of($cardId),
-            PlanId::of($planId),
-            CustomerId::of($customerId),
-            Description::of($description),
-        );
-        $card->issued = $issued;
-        $card->satisfied = $satisfied;
-        $card->completed = $completed;
-        $card->revoked = $revoked;
-        $card->blocked = $blocked;
-        $card->achievements = Achievements::of(...$achievements);
-        $card->requirements = Achievements::of(...$requirements);
-        return $card;
+    public function issue(PlanId $planId, CustomerId $customerId, Description $description, Carbon $issued): self
+    {
+        return $this->recordThat(CardIssued::of($planId, $customerId, $description, $issued));
+    }
+
+    public function id(): CardId
+    {
+        return $this->cardId;
     }
 
     public function complete(): self
@@ -90,23 +70,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->completed = Carbon::now();
-        return $this->withEvents(CardCompleted::of($this));
-    }
-
-    public function isCompleted(): bool
-    {
-        return $this->completed !== null;
-    }
-
-    public function isRevoked(): bool
-    {
-        return $this->revoked !== null;
-    }
-
-    public function isBlocked(): bool
-    {
-        return $this->blocked !== null;
+        return $this->recordThat(CardCompleted::of(Carbon::now()));
     }
 
     public function revoke(): self
@@ -115,8 +79,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->revoked = Carbon::now();
-        return $this->withEvents(CardRevoked::of($this));
+        return $this->recordThat(CardRevoked::of(Carbon::now()));
     }
 
     public function block(): self
@@ -125,8 +88,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->blocked = Carbon::now();
-        return $this->withEvents(CardBlocked::of($this));
+        return $this->recordThat(CardBlocked::of(Carbon::now()));
     }
 
     public function unblock(): self
@@ -135,8 +97,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->blocked = null;
-        return $this->withEvents(CardUnblocked::of($this));
+        return $this->recordThat(CardUnblocked::of());
     }
 
     public function noteAchievement(Achievement $achievement): self
@@ -145,23 +106,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->achievements = $this->achievements->add($achievement);
-        return $this->withEvents(AchievementNoted::of($this))->tryToSatisfy();
-    }
-
-    public function isSatisfied(): bool
-    {
-        return $this->satisfied !== null;
-    }
-
-    private function tryToSatisfy(): self
-    {
-        $requirements = $this->requirements->filterRemaining($this->achievements);
-        if ($requirements->isEmpty()) {
-            $this->satisfied = Carbon::now();
-            return $this->withEvents(CardSatisfied::of($this));
-        }
-        return $this;
+        return $this->recordThat(AchievementNoted::of($achievement))->tryToSatisfy();
     }
 
     public function dismissAchievement(string $achievementId): self
@@ -170,23 +115,7 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->achievements = $this->achievements->removeById($achievementId);
-        return $this->withEvents(AchievementDismissed::of($this))->tryToWithdrawSatisfaction();
-    }
-
-    private function tryToWithdrawSatisfaction(): self
-    {
-        if (!$this->isSatisfied()) {
-            return $this;
-        }
-
-        $requirements = $this->requirements->filterRemaining($this->achievements);
-        if (!$requirements->isEmpty()) {
-            $this->satisfied = null;
-            return $this->withEvents(CardSatisfactionWithdrawn::of($this));
-        }
-
-        return $this;
+        return $this->recordThat(AchievementDismissed::of($achievementId))->tryToWithdrawSatisfaction();
     }
 
     public function acceptRequirements(Achievements $requirements): self
@@ -195,15 +124,12 @@ final class Card implements AggregateRootInterface
             throw new InvalidCardStateException();
         }
 
-        $this->requirements = $requirements;
-        return $this->withEvents(RequirementsAccepted::of($this))->tryToSatisfy();
+        return $this->recordThat(RequirementsAccepted::of($requirements))->tryToSatisfy();
     }
 
     public function fixAchievementDescription(Achievement $achievement): self
     {
-        $this->achievements = $this->achievements->replace($achievement);
-        $this->requirements = $this->requirements->replace($achievement);
-        return $this->withEvents(AchievementDescriptionFixed::of($this));
+        return $this->recordThat(AchievementDescriptionFixed::of($achievement));
     }
 
     public function getDescription(): ?Description
@@ -221,9 +147,67 @@ final class Card implements AggregateRootInterface
         return $this->requirements;
     }
 
+    public function isCompleted(): bool
+    {
+        return $this->completed !== null;
+    }
+
+    public function isRevoked(): bool
+    {
+        return $this->revoked !== null;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->blocked !== null;
+    }
+
+    public function isSatisfied(): bool
+    {
+        return $this->satisfied !== null;
+    }
+
     public function isIssued(): bool
     {
         return $this->issued !== null;
     }
 
+    private function tryToSatisfy(): self
+    {
+        $requirements = $this->requirements->filterRemaining($this->achievements);
+        if ($requirements->isEmpty()) {
+            return $this->recordThat(CardSatisfied::of(Carbon::now()));
+        }
+        return $this;
+    }
+
+    private function tryToWithdrawSatisfaction(): self
+    {
+        if (!$this->isSatisfied()) {
+            return $this;
+        }
+
+        $requirements = $this->requirements->filterRemaining($this->achievements);
+        if (!$requirements->isEmpty()) {
+            return $this->recordThat(CardSatisfactionWithdrawn::of());
+        }
+
+        return $this;
+    }
+
+    private function applyAchievementNoted(AchievementNoted $achievementNoted): void
+    {
+        $this->achievements = $this->achievements->add($achievementNoted->achievement);
+    }
+
+    private function applyAchievementDismissed(AchievementDismissed $achievementDismissed): void
+    {
+        $this->achievements = $this->achievements->removeById($achievementDismissed->achievementId);
+    }
+
+    private function applyAchievementDescriptionFixed(AchievementDescriptionFixed $achievementDescriptionFixed): void
+    {
+        $this->achievements = $this->achievements->replace($achievementDescriptionFixed->achievement);
+        $this->requirements = $this->requirements->replace($achievementDescriptionFixed->achievement);
+    }
 }

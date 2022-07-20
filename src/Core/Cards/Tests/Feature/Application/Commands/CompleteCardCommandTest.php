@@ -16,14 +16,14 @@ class CompleteCardCommandTest extends BaseTestCase
     public function test_card_can_be_completed()
     {
         $card = CardBuilder::make()->build();
-        $this->getCardRepository()->persist($card);
+        $this->getCardRepository()->store($card);
 
         $this->assertFalse($card->isCompleted());
 
         $command = CompleteCard::of($card->cardId);
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $this->assertTrue($card->isCompleted());
         $this->assertEvent(CardCompleted::class);

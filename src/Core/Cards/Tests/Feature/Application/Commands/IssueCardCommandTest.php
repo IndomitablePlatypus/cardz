@@ -19,7 +19,7 @@ class IssueCardCommandTest extends BaseTestCase
         $command = IssueCard::of(PlanId::makeValue(), CustomerId::makeValue());
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $this->assertEquals($command->getCardId(), $card->cardId);
         $this->assertEvent(CardIssued::class);

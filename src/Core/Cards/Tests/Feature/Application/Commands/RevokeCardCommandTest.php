@@ -16,14 +16,14 @@ class RevokeCardCommandTest extends BaseTestCase
     public function test_card_can_be_revoked()
     {
         $card = CardBuilder::make()->build();
-        $this->getCardRepository()->persist($card);
+        $this->getCardRepository()->store($card);
 
         $this->assertFalse($card->isRevoked());
 
         $command = RevokeCard::of($card->cardId);
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $this->assertTrue($card->isRevoked());
         $this->assertEvent(CardRevoked::class);

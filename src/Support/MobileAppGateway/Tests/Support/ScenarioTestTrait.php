@@ -4,6 +4,10 @@ namespace Cardz\Support\MobileAppGateway\Tests\Support;
 
 use Carbon\Carbon;
 use Cardz\Core\Cards\Domain\Persistence\Contracts\CardRepositoryInterface;
+use Cardz\Core\Cards\Domain\ReadModel\IssuedCard;
+use Cardz\Core\Cards\Domain\ReadModel\ReadCard;
+use Cardz\Core\Cards\Infrastructure\ReadStorage\Contracts\CardReadStorageInterface;
+use Cardz\Core\Cards\Infrastructure\ReadStorage\Contracts\IssuedCardReadStorageInterface;
 use Cardz\Core\Personal\Domain\Model\Person\Name;
 use Cardz\Core\Personal\Domain\Model\Person\Person;
 use Cardz\Core\Personal\Domain\Model\Person\PersonId;
@@ -69,7 +73,8 @@ trait ScenarioTestTrait
         }
 
         foreach ($this->environment->cards as $card) {
-            $this->getCardRepository()->persist($card);
+            $this->getCardRepository()->store($card);
+            $this->getCardReadStore()->persist(ReadCard::of($card));
         }
 
         foreach ($this->environment->invites as $invite) {
@@ -118,6 +123,11 @@ trait ScenarioTestTrait
     public function getCardRepository(): CardRepositoryInterface
     {
         return $this->app->make(CardRepositoryInterface::class);
+    }
+
+    public function getCardReadStore(): CardReadStorageInterface
+    {
+        return $this->app->make(CardReadStorageInterface::class);
     }
 
     public function getInviteRepository(): InviteRepositoryInterface

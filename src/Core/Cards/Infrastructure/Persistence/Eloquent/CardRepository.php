@@ -2,71 +2,35 @@
 
 namespace Cardz\Core\Cards\Infrastructure\Persistence\Eloquent;
 
-use App\Models\Card as EloquentCard;
+use Cardz\Core\Cards\Domain\Exceptions\CardNotFoundExceptionInterface;
 use Cardz\Core\Cards\Domain\Model\Card\Card;
 use Cardz\Core\Cards\Domain\Model\Card\CardId;
 use Cardz\Core\Cards\Domain\Persistence\Contracts\CardRepositoryInterface;
 use Cardz\Core\Cards\Infrastructure\Exceptions\CardNotFoundException;
-use Codderz\Platypus\Infrastructure\Support\PropertiesExtractorTrait;
-use function json_try_decode;
+use Codderz\Platypus\Contracts\GenericIdInterface;
+use Codderz\Platypus\Infrastructure\Persistence\EventStore\Eloquent\EloquentEventRepositoryTrait;
 
 class CardRepository implements CardRepositoryInterface
 {
-    use PropertiesExtractorTrait;
+    use EloquentEventRepositoryTrait;
 
-    public function persist(Card $card): void
+    /**
+     * @throws CardNotFoundExceptionInterface
+     */
+    public function restore(CardId $cardId): Card
     {
-        EloquentCard::query()->updateOrCreate(
-            ['id' => $card->cardId],
-            $this->cardAsData($card)
-        );
+        return Card::draft($cardId)->apply(...$this->getRestoredEvents($cardId));
     }
 
-    public function take(CardId $cardId): Card
+    protected function getAggregateRootName(): string
     {
-        /** @var EloquentCard $eloquentCard */
-        $eloquentCard = EloquentCard::query()->find((string) $cardId);
-        if ($eloquentCard === null) {
-            throw new CardNotFoundException((string) $cardId);
+        return Card::class;
+    }
+
+    protected function assertAggregateRootCanBeRestored(GenericIdInterface $id, bool $eventsExist): void
+    {
+        if (!$eventsExist) {
+            throw new CardNotFoundException("Card $id not found");
         }
-        return $this->cardFromData($eloquentCard);
-    }
-
-    private function cardAsData(Card $card): array
-    {
-        $properties = $this->extractProperties($card, 'issued', 'satisfied', 'completed', 'revoked', 'blocked');
-        return [
-            'id' => (string) $card->cardId,
-            'plan_id' => (string) $card->planId,
-            'customer_id' => (string) $card->customerId,
-            'description' => (string) $card->getDescription(),
-            'issued_at' => $properties['issued'],
-            'satisfied_at' => $properties['satisfied'],
-            'completed_at' => $properties['completed'],
-            'revoked_at' => $properties['revoked'],
-            'blocked_at' => $properties['blocked'],
-            'achievements' => $card->getAchievements()->toArray(),
-            'requirements' => $card->getRequirements()->toArray(),
-        ];
-    }
-
-    private function cardFromData(EloquentCard $eloquentCard): Card
-    {
-        $achievements = is_string($eloquentCard->achievements) ? json_try_decode($eloquentCard->achievements, true) : $eloquentCard->achievements;
-        $requirements = is_string($eloquentCard->requirements) ? json_try_decode($eloquentCard->requirements, true) : $eloquentCard->requirements;
-
-        return Card::restore(
-            $eloquentCard->id,
-            $eloquentCard->plan_id,
-            $eloquentCard->customer_id,
-            $eloquentCard->description,
-            $eloquentCard->issued_at,
-            $eloquentCard->satisfied_at,
-            $eloquentCard->completed_at,
-            $eloquentCard->revoked_at,
-            $eloquentCard->blocked_at,
-            $achievements,
-            $requirements,
-        );
     }
 }

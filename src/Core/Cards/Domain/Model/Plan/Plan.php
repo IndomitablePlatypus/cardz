@@ -2,6 +2,7 @@
 
 namespace Cardz\Core\Cards\Domain\Model\Plan;
 
+use Carbon\Carbon;
 use Cardz\Core\Cards\Domain\Model\Card\Achievements;
 use Cardz\Core\Cards\Domain\Model\Card\Card;
 use Cardz\Core\Cards\Domain\Model\Card\CardId;
@@ -37,7 +38,7 @@ final class Plan implements AggregateRootInterface
 
     public function issueCard(CardId $cardId, CustomerId $customerId): Card
     {
-        $card = Card::issue($cardId, $this->planId, $customerId, Description::of($this->description));
+        $card = Card::draft($cardId)->issue($this->planId, $customerId, Description::of($this->description), Carbon::now());
         $card->acceptRequirements(Achievements::from(...$this->requirements));
         return $card;
     }

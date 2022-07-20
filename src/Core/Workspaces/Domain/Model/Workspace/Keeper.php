@@ -18,12 +18,6 @@ final class Keeper implements EventDrivenAggregateRootInterface
     ) {
     }
 
-    #[Pure]
-    public static function restore(KeeperId $keeperId): self
-    {
-        return new self($keeperId);
-    }
-
     public static function register(KeeperId $keeperId): self
     {
         return (new self($keeperId))->recordThat(KeeperRegistered::of());

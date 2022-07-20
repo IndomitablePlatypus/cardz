@@ -8,16 +8,22 @@ use Cardz\Core\Cards\Domain\Persistence\Contracts\CardRepositoryInterface;
 
 class CardInMemoryRepository implements CardRepositoryInterface
 {
-    protected static array $storage = [];
+    protected static array $events = [];
 
-    public function persist(Card $card): void
+    public function store(Card $card): array
     {
-        static::$storage[(string) $card->cardId] = $card;
+        $id = (string) $card->cardId;
+        $events = $card->releaseEvents();
+        static::$events[$id] ??= [];
+        static::$events[$id] = [...static::$events[$id], ...$events];
+        return $events;
     }
 
-    public function take(CardId $cardId): Card
+    public function restore(CardId $cardId): Card
     {
-        return static::$storage[(string) $cardId];
+        $events = collect(static::$events[(string) $cardId] ??= [])->sortByDesc(function ($event, $key) {
+            return $event->at()->timestamp;
+        });
+        return Card::draft($cardId)->apply(...$events->all());
     }
-
 }

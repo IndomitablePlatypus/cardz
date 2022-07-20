@@ -19,12 +19,12 @@ class NoteAchievementCommandTest extends BaseTestCase
     {
         $requirements = RequirementBuilder::generateSeries();
         $card = CardBuilder::make()->withRequirements(...$requirements)->build();
-        $this->getCardRepository()->persist($card);
+        $this->getCardRepository()->store($card);
 
         $command = NoteAchievement::of($card->cardId, $requirements[0]->requirementId, $requirements[0]->description);
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $requirements = Achievements::from(...$requirements);
         $this->assertEquals($requirements->toArray()[0], $card->getAchievements()->toArray()[0]);

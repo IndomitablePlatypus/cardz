@@ -18,12 +18,12 @@ class AcceptRequirementsCommandTest extends BaseTestCase
     {
         $requirements = RequirementBuilder::generateSeries(10);
         $card = CardBuilder::make()->build();
-        $this->getCardRepository()->persist($card);
+        $this->getCardRepository()->store($card);
 
         $command = AcceptRequirements::of($card->cardId, ...$requirements);
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $this->assertEquals($command->getRequirements(), $card->getRequirements());
         $this->assertEvent(RequirementsAccepted::class);

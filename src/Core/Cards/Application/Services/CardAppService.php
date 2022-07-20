@@ -112,8 +112,8 @@ class CardAppService
 
     private function release(Card $card): CardId
     {
-        $this->cardRepository->persist($card);
-        $this->domainEventBus->publish(...$card->releaseEvents());
+        $events = $this->cardRepository->store($card);
+        $this->domainEventBus->publish(...$events);
         return $card->cardId;
     }
 
@@ -122,6 +122,6 @@ class CardAppService
      */
     private function card(CardCommandInterface $command): Card
     {
-        return $this->cardRepository->take($command->getCardId());
+        return $this->cardRepository->restore($command->getCardId());
     }
 }

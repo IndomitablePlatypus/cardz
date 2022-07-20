@@ -11,7 +11,7 @@ final class IssuedCard
 {
     use ArrayPresenterTrait;
 
-    private function __construct(
+    public function __construct(
         public string $cardId,
         public string $planId,
         public string $customerId,
@@ -25,32 +25,7 @@ final class IssuedCard
     }
 
     #[Pure]
-    public static function of(
-        string $cardId,
-        string $planId,
-        string $customerId,
-        bool $satisfied,
-        bool $completed,
-        bool $revoked,
-        bool $blocked,
-        Achievements $achievements,
-        Achievements $requirements,
-    ): self {
-        return new self(
-            $cardId,
-            $planId,
-            $customerId,
-            $satisfied,
-            $completed,
-            $revoked,
-            $blocked,
-            $achievements,
-            $requirements,
-        );
-    }
-
-    #[Pure]
-    public static function from(Card $card): self
+    public static function of(Card $card): self
     {
         return new self(
             (string) $card->cardId,

@@ -22,12 +22,12 @@ class DismissAchievementCommandTest extends BaseTestCase
             ->withRequirements(...$requirements)
             ->withAchievements(Achievement::of($requirements[0]->requirementId, $requirements[0]->description))
             ->build();
-        $this->getCardRepository()->persist($card);
+        $this->getCardRepository()->store($card);
 
         $command = DismissAchievement::of($card->cardId, $requirements[0]->requirementId);
         $this->commandBus()->dispatch($command);
 
-        $card = $this->getCardRepository()->take($command->getCardId());
+        $card = $this->getCardRepository()->restore($command->getCardId());
 
         $this->assertEmpty($card->getAchievements()->toArray());
         $this->assertEvent(AchievementDismissed::class);

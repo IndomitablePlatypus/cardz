@@ -38,7 +38,7 @@ class IssuedCardReadStorage implements IssuedCardReadStorageInterface
         $achievements = is_string($card->achievements) ? json_try_decode($card->achievements, true) : $card->achievements;
         $requirements = is_string($card->requirements) ? json_try_decode($card->requirements, true) : $card->requirements;
 
-        return IssuedCard::of(
+        return new IssuedCard(
             $card->id,
             $card->plan_id,
             $card->customer_id,

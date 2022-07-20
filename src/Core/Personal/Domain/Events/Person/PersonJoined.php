@@ -22,6 +22,6 @@ final class PersonJoined extends BasePersonDomainEvent
 
     public static function from(array $data): static
     {
-        return new static(Name::of($data['name']), new Carbon($data['joined']));
+        return new self(Name::of($data['name']), new Carbon($data['joined']));
     }
 }

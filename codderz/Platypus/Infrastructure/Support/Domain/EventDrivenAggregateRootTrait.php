@@ -44,6 +44,7 @@ trait EventDrivenAggregateRootTrait
     public function apply(AggregateEventInterface ...$aggregateEvents): static
     {
         foreach ($aggregateEvents as $aggregateEvent) {
+            $aggregateEvent->in($this);
             $this->applyEvent($aggregateEvent);
         }
         return $this;
@@ -51,8 +52,6 @@ trait EventDrivenAggregateRootTrait
 
     protected function applyEvent(AggregateEventInterface $aggregateEvent): void
     {
-        $aggregateEvent->in($this);
-
         $method = $this->getApplyingMethodName($aggregateEvent);
         if ($method) {
             $this->$method($aggregateEvent);

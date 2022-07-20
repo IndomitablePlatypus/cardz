@@ -57,16 +57,16 @@ class CardChangedDomainEventConsumer implements EventConsumerInterface
         $card = $event->with();
 
         $integrationEvent = match (true) {
-            $event instanceof DomainAchievementDismissed => AchievementDismissed::of(IssuedCard::from($card)),
-            $event instanceof DomainAchievementNoted => AchievementNoted::of(IssuedCard::from($card)),
-            $event instanceof DomainCardBlocked => CardBlocked::of(IssuedCard::from($card)),
-            $event instanceof DomainCardCompleted => CardCompleted::of(IssuedCard::from($card)),
-            $event instanceof DomainCardIssued => CardIssued::of(IssuedCard::from($card)),
-            $event instanceof DomainCardRevoked => CardRevoked::of(IssuedCard::from($card)),
-            $event instanceof DomainCardSatisfactionWithdrawn => CardSatisfactionWithdrawn::of(IssuedCard::from($card)),
-            $event instanceof DomainCardSatisfied => CardSatisfied::of(IssuedCard::from($card)),
-            $event instanceof DomainCardUnblocked => CardUnblocked::of(IssuedCard::from($card)),
-            $event instanceof DomainRequirementsAccepted => RequirementsAccepted::of(IssuedCard::from($card)),
+            $event instanceof DomainAchievementDismissed => AchievementDismissed::of(IssuedCard::of($card)),
+            $event instanceof DomainAchievementNoted => AchievementNoted::of(IssuedCard::of($card)),
+            $event instanceof DomainCardBlocked => CardBlocked::of(IssuedCard::of($card)),
+            $event instanceof DomainCardCompleted => CardCompleted::of(IssuedCard::of($card)),
+            $event instanceof DomainCardIssued => CardIssued::of(IssuedCard::of($card)),
+            $event instanceof DomainCardRevoked => CardRevoked::of(IssuedCard::of($card)),
+            $event instanceof DomainCardSatisfactionWithdrawn => CardSatisfactionWithdrawn::of(IssuedCard::of($card)),
+            $event instanceof DomainCardSatisfied => CardSatisfied::of(IssuedCard::of($card)),
+            $event instanceof DomainCardUnblocked => CardUnblocked::of(IssuedCard::of($card)),
+            $event instanceof DomainRequirementsAccepted => RequirementsAccepted::of(IssuedCard::of($card)),
             default => null,
         };
 

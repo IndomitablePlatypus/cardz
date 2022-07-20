@@ -12,12 +12,12 @@ use Cardz\Core\Cards\Tests\Feature\CardsTestHelperTrait;
 use Cardz\Core\Cards\Tests\Support\Builders\CardBuilder;
 use Cardz\Core\Cards\Tests\Support\Builders\PlanBuilder;
 use Cardz\Core\Cards\Tests\Support\Builders\RequirementBuilder;
+use Codderz\Platypus\Infrastructure\Tests\ApplicationTestTrait;
 use Codderz\Platypus\Infrastructure\Tests\BaseTestCase;
-use Codderz\Platypus\Infrastructure\Tests\DomainTestTrait;
 
 class CardSatisfactionTest extends BaseTestCase
 {
-    use DomainTestTrait, CardsTestHelperTrait;
+    use ApplicationTestTrait, CardsTestHelperTrait;
 
     public function test_issued_card_on_empty_plan_is_satisfied()
     {
@@ -27,7 +27,6 @@ class CardSatisfactionTest extends BaseTestCase
         $cardId = CardId::make();
         $card = $planBuilder->build()->issueCard($cardId, CustomerId::make());
         $this->assertTrue($card->isSatisfied());
-        $this->assertDomainEvent($card, CardSatisfied::class);
     }
 
     public function test_issued_card_is_satisfied_on_requirements_completed()
@@ -42,7 +41,6 @@ class CardSatisfactionTest extends BaseTestCase
 
         $card->noteAchievement(Achievement::of($requirement->requirementId, $requirement->description));
         $this->assertTrue($card->isSatisfied());
-        $this->assertDomainEvent($card, CardSatisfied::class);
     }
 
     public function test_satisfaction_is_withdrawn_on_dismissing_achievement()
@@ -53,11 +51,10 @@ class CardSatisfactionTest extends BaseTestCase
             ->withRequirements($requirement)
             ->withAchievements($achievement);
         $cardBuilder->satisfied = Carbon::now();
-        $card= $cardBuilder->build();
+        $card = $cardBuilder->build();
 
         $card->dismissAchievement($requirement->requirementId);
         $this->assertFalse($card->isSatisfied());
-        $this->assertDomainEvent($card, CardSatisfactionWithdrawn::class);
     }
 
     public function setUp(): void

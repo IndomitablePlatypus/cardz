@@ -21,6 +21,6 @@ final class PersonNameChanged extends BasePersonDomainEvent
     #[Pure]
     public static function from(array $data): static
     {
-        return new static(Name::of($data['name']));
+        return new self(Name::of($data['name']));
     }
 }

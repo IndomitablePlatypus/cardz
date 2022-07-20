@@ -23,16 +23,6 @@ final class Workspace implements EventDrivenAggregateRootInterface
     ) {
     }
 
-    public static function restore(string $workspaceId, string $keeperId, ?Carbon $added, array $profile): self
-    {
-        $workspace = new self(WorkspaceId::of($workspaceId));
-        $workspace->added = $added;
-        $workspace->keeperId = KeeperId::of($keeperId);
-        $workspace->profile = Profile::of(...$profile);
-        $workspace->added = new Carbon($added);
-        return $workspace;
-    }
-
     public function add(KeeperId $keeperId, Profile $profile, Carbon $added): self
     {
         return $this->recordThat(WorkspaceAdded::of($keeperId, $profile, $added));

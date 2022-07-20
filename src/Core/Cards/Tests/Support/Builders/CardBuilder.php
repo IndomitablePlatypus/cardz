@@ -3,6 +3,10 @@
 namespace Cardz\Core\Cards\Tests\Support\Builders;
 
 use Carbon\Carbon;
+use Cardz\Core\Cards\Application\Commands\AcceptRequirements;
+use Cardz\Core\Cards\Domain\Events\Card\AchievementNoted;
+use Cardz\Core\Cards\Domain\Events\Card\CardIssued;
+use Cardz\Core\Cards\Domain\Events\Card\RequirementsAccepted;
 use Cardz\Core\Cards\Domain\Model\Card\Achievement;
 use Cardz\Core\Cards\Domain\Model\Card\Achievements;
 use Cardz\Core\Cards\Domain\Model\Card\Card;
@@ -39,7 +43,13 @@ final class CardBuilder extends BaseBuilder
 
     public function build(): Card
     {
-        return $this->forceConstruct(Card::class);
+        $card = Card::draft($this->cardId)
+            ->recordThat(CardIssued::of($this->planId, $this->customerId, $this->description, $this->issued))
+            ->recordThat(RequirementsAccepted::of($this->requirements));
+        foreach ($this->achievements->toArray() as $achievement) {
+            $card->recordThat(AchievementNoted::of(Achievement::of(...$achievement)));
+        }
+        return $card;
     }
 
     public function withRequirements(Requirement ... $requirements): self
