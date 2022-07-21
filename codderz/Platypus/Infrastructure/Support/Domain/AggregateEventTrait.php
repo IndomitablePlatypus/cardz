@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
 use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Support\ArrayPresenterTrait;
+use Codderz\Platypus\Infrastructure\Support\GuidBasedImmutableId;
 use Codderz\Platypus\Infrastructure\Support\JsonArrayPresenterTrait;
 use Codderz\Platypus\Infrastructure\Support\ShortClassNameTrait;
 use JetBrains\PhpStorm\ArrayShape;
@@ -24,11 +25,35 @@ trait AggregateEventTrait
 
     protected EventDrivenAggregateRootInterface $aggregateRoot;
 
+    protected GenericIdInterface $stream;
+
+    protected string $channel;
+
+    public static function fromArray(array $data): ?static
+    {
+        try {
+            $changeset = json_decode($data['changeset'], true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return null;
+        }
+
+        $event = static::from($changeset);
+
+        $event->channel = $data['channel'];
+        $event->stream = GuidBasedImmutableId::of($data['stream']);
+        $event->at = new Carbon($data['at']);
+        $event->version = $data['version'];
+
+        return $event;
+    }
+
+    abstract protected static function from(array $changeset): static;
+
     abstract public function version(): int;
 
     public function channel(): string
     {
-        return $this->aggregateRoot::class;
+        return $this->channel;
     }
 
     public function name(): string
@@ -38,7 +63,7 @@ trait AggregateEventTrait
 
     public function stream(): GenericIdInterface
     {
-        return $this->aggregateRoot->id();
+        return $this->stream;
     }
 
     public function at(): Carbon
@@ -61,6 +86,8 @@ trait AggregateEventTrait
     {
         $this->at ??= Carbon::now();
         $this->aggregateRoot = $aggregateRoot;
+        $this->stream = $aggregateRoot->id();
+        $this->channel = $aggregateRoot::class;
         return $this;
     }
 

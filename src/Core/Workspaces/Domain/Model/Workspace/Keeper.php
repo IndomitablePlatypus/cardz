@@ -5,12 +5,18 @@ namespace Cardz\Core\Workspaces\Domain\Model\Workspace;
 use Carbon\Carbon;
 use Cardz\Core\Workspaces\Domain\Events\Keeper\KeeperRegistered;
 use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
+use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Support\Domain\EventDrivenAggregateRootTrait;
 use JetBrains\PhpStorm\Pure;
 
 final class Keeper implements EventDrivenAggregateRootInterface
 {
     use EventDrivenAggregateRootTrait;
+
+    protected static function idFromEventStream(GenericIdInterface $id): KeeperId
+    {
+        return KeeperId::of($id);
+    }
 
     #[Pure]
     public function __construct(
@@ -30,6 +36,6 @@ final class Keeper implements EventDrivenAggregateRootInterface
 
     public function keepWorkspace(WorkspaceId $workspaceId, Profile $profile): Workspace
     {
-        return (new Workspace($workspaceId))->add($this->keeperId, $profile, Carbon::now());
+        return Workspace::draft($workspaceId)->add($this->keeperId, $profile, Carbon::now());
     }
 }

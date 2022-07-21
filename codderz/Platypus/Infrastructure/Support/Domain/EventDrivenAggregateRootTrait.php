@@ -3,6 +3,8 @@
 namespace Codderz\Platypus\Infrastructure\Support\Domain;
 
 use Codderz\Platypus\Contracts\Domain\AggregateEventInterface;
+use Codderz\Platypus\Contracts\GenericIdInterface;
+use Codderz\Platypus\Infrastructure\Support\GuidBasedImmutableId;
 use Codderz\Platypus\Infrastructure\Support\JsonArrayPresenterTrait;
 
 trait EventDrivenAggregateRootTrait
@@ -15,6 +17,16 @@ trait EventDrivenAggregateRootTrait
      * @var AggregateEventInterface[]
      */
     protected array $events = [];
+
+    public static function fromEvents(AggregateEventInterface ...$aggregateEvents): ?static
+    {
+        if (!$aggregateEvents) {
+            return null;
+        }
+        return (new static(static::idFromEventStream($aggregateEvents[0]->stream())))->apply(...$aggregateEvents);
+    }
+
+    abstract protected static function idFromEventStream(GenericIdInterface $id): mixed;
 
     /**
      * @return AggregateEventInterface[]
@@ -45,19 +57,14 @@ trait EventDrivenAggregateRootTrait
     {
         foreach ($aggregateEvents as $aggregateEvent) {
             $aggregateEvent->in($this);
-            $this->applyEvent($aggregateEvent);
+            $method = $this->getApplyingMethodName($aggregateEvent);
+            $this->$method($aggregateEvent);
         }
         return $this;
     }
 
-    protected function applyEvent(AggregateEventInterface $aggregateEvent): void
+    protected function incorporateChangeset(AggregateEventInterface $aggregateEvent): void
     {
-        $method = $this->getApplyingMethodName($aggregateEvent);
-        if ($method) {
-            $this->$method($aggregateEvent);
-            return;
-        }
-
         $properties = $aggregateEvent->changeset();
         foreach ($properties as $propertyName => $propertyValue) {
             if (property_exists($this, $propertyName)) {
@@ -69,6 +76,6 @@ trait EventDrivenAggregateRootTrait
     protected function getApplyingMethodName(AggregateEventInterface $aggregateEvent): ?string
     {
         $methodName = $this->methodPrefix . $aggregateEvent::shortName();
-        return method_exists($this, $methodName) ? $methodName : null;
+        return method_exists($this, $methodName) ? $methodName : 'incorporateChangeset';
     }
 }

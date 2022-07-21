@@ -19,7 +19,8 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface
      */
     public function restore(WorkspaceId $workspaceId): Workspace
     {
-        return (new Workspace($workspaceId))->apply(...$this->getRestoredEvents($workspaceId));
+        return Workspace::fromEvents(...$this->getRestoredEvents($workspaceId))
+            ?? throw new WorkspaceNotFoundException("Workspace $workspaceId cannot be restored");
     }
 
     protected function getAggregateRootName(): string

@@ -24,6 +24,6 @@ class WorkspaceInMemoryRepository implements WorkspaceRepositoryInterface
         $events = collect(static::$events[(string) $workspaceId] ??= [])->sortByDesc(function ($event, $key) {
             return $event->at()->timestamp;
         });
-        return (new Workspace($workspaceId))->apply(...$events->all());
+        return Workspace::draft($workspaceId)->apply(...$events->all());
     }
 }

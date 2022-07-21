@@ -27,9 +27,8 @@ final class WorkspaceBuilder extends BaseBuilder
 
     public function build(): Workspace
     {
-        return (new Workspace(WorkspaceId::of($this->workspaceId)))->recordThat(
-            WorkspaceAdded::of(KeeperId::of($this->keeperId), $this->profile(), $this->added)
-        );
+        return Workspace::draft(WorkspaceId::of($this->workspaceId))
+            ->recordThat(WorkspaceAdded::of(KeeperId::of($this->keeperId), $this->profile(), $this->added));
     }
 
     public function withKeeperId(string $keeperId): static

@@ -17,6 +17,7 @@ use Cardz\Core\Cards\Domain\Events\Card\RequirementsAccepted;
 use Cardz\Core\Cards\Domain\Exceptions\InvalidCardStateException;
 use Cardz\Core\Cards\Domain\Model\Plan\PlanId;
 use Codderz\Platypus\Contracts\Domain\EventDrivenAggregateRootInterface;
+use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Support\Domain\EventDrivenAggregateRootTrait;
 
 final class Card implements EventDrivenAggregateRootInterface
@@ -42,6 +43,11 @@ final class Card implements EventDrivenAggregateRootInterface
     private Achievements $achievements;
 
     private Achievements $requirements;
+
+    protected static function idFromEventStream(GenericIdInterface $id): CardId
+    {
+        return CardId::of($id);
+    }
 
     public function __construct(public CardId $cardId)
     {

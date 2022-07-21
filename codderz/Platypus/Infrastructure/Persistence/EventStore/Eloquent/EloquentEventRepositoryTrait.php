@@ -9,7 +9,9 @@ use Codderz\Platypus\Contracts\Exceptions\NotFoundExceptionInterface;
 use Codderz\Platypus\Contracts\GenericIdInterface;
 use Codderz\Platypus\Infrastructure\Logging\SimpleLoggerTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use JsonException;
+use ReflectionClass;
 
 trait EloquentEventRepositoryTrait
 {
@@ -52,18 +54,18 @@ trait EloquentEventRepositoryTrait
         return $events;
     }
 
-    protected function restoreEvent(object $esEvent): ?AggregateEventInterface
+    protected function restoreEvent(Model $esEvent): ?AggregateEventInterface
     {
         /** @var AggregateEventInterface $eventClass */
         $eventClass = $esEvent->name;
-        try {
-            $changeset = json_decode($esEvent->changeset, true, flags: JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
+        $event = $eventClass::fromArray($esEvent->toArray());
+
+        if(!$event) {
             $this->error("Unable to restore $eventClass event.");
             return null;
         }
 
-        return $eventClass::from($changeset);
+        return $event;
     }
 
     protected function getEloquentStoreBuilder(): Builder
